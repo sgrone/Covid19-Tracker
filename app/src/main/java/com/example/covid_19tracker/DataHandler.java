@@ -113,8 +113,6 @@ public class DataHandler {
                     // the getString() must match
                     // with the name given in JSON format
                     tvCases = jsonObject.getString("cases");
-                    tvRecovered = jsonObject.getString("recovered");
-                    tvCritical = jsonObject.getString("critical");
                     tvActive = jsonObject.getString("active");
                     tvTodayCases = jsonObject.getString("todayCases");
                     tvTotalDeaths = jsonObject.getString("deaths");
