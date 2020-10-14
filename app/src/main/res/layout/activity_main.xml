@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -10,179 +10,125 @@
     tools:context=".MainActivity">
 
     <!--Linear Layout to display all the details-->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp"
-        android:orientation="vertical">
+        android:padding="20dp">
 
         <!--Text view to display Global stats-->
+
         <TextView
-            android:layout_width="match_parent"
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Covid-19 Tracker"
-            android:textColor="#050505"
-            android:textAllCaps="true"
-            android:textAlignment="center"
-            android:textSize="35sp"
-            android:textStyle="bold"/>
+            android:layout_centerHorizontal="true"
+            android:text="Covid-19 Data"
+            android:textColor="#ff9d5c"
+            android:textSize="50sp"
+            android:textStyle="bold" />
 
-        <!--Text view to display Total Cases-->
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:layout_marginTop="20dp"
-            android:text="Total Cases"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:textSize="30sp"/>
-
-        <!--Text view to display the updated number when data
-         will fetch from the API. For now default set to 0 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:id="@+id/tvCases"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:textColor="@color/color_one"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-light" />
-
-        <!--Spinner: ADD REST OF STATES TO strings.xml-->
-
-        <!--Text view to display Active Cases-->
-        <Spinner
-            android:id="@+id/stateSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:textAlignment="center"
-            android:textSize="50sp"
+            android:id="@+id/staticSeachByState"
+            android:layout_below="@+id/title"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="5dp"
+            android:text="Search by State:"
+            android:textStyle="bold"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"/>
+
+        <Spinner
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:id="@+id/stateSpinner"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginStart="5dp"
+            android:layout_below="@+id/staticSeachByState"
+            android:layout_marginTop="15dp"
+            android:textSize="15sp"
             android:textStyle="bold" />
 
         <Button
             android:id="@+id/viewChangeBtn"
+            android:layout_width="75dp"
+            android:layout_height="40dp"
+            android:fontFamily="sans-serif-light"
+            android:layout_marginStart="5dp"
+            android:layout_alignTop="@id/stateSpinner"
+            android:layout_toEndOf="@+id/stateSpinner"
+            android:text="GO" />
+
+        <ImageView
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:id="@+id/heatMap"
+            android:contentDescription="Heatmap picture"
+            android:layout_below="@+id/viewChangeBtn"
+            android:layout_marginTop="15dp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/map"/>
+
+        <!--Text view to display Total Cases-->
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Go" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:text="Active"
-            android:textAlignment="center"
+            android:id="@+id/totalCases"
+            android:layout_marginTop="15dp"
+            android:layout_marginStart="5dp"
+            android:textColor="@android:color/black"
+            android:layout_below="@+id/heatMap"
+            android:text="Total World Cases:"
             android:textStyle="bold"
-            android:textSize="30sp"/>
+            android:textSize="20sp"/>
 
         <!--Text view to display the updated number when data
          will fetch from the API. For now default set to 0 -->
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
-            android:id="@+id/tvActive"
-            android:textAlignment="center"
-            android:textSize="25sp"
+            android:id="@+id/tvCases"
+            android:layout_toEndOf="@+id/totalCases"
+            android:layout_alignTop="@id/totalCases"
+            android:layout_marginStart="15dp"
+            android:textSize="20sp"
             android:textColor="@color/color_one"
             android:textStyle="bold"
-            android:fontFamily="sans-serif-light" />
-
-        <!--Text view to display Today Cases-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:text="Today Cases"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:textSize="30sp"/>
-
-        <!--Text view to display the updated number when data
-         will fetch from the API. For now default set to 0 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:id="@+id/tvTodayCases"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:textColor="@color/color_one"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-light" />
+            android:fontFamily="sans-serif-light"/>
 
         <!--Text view to display Total Deaths-->
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
-            android:text="Total Deaths"
-            android:textAlignment="center"
+            android:id="@+id/totalDeaths"
+            android:layout_below="@+id/totalCases"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="5dp"
+            android:textColor="@android:color/black"
+            android:text="Total World Deaths:"
             android:textStyle="bold"
-            android:textSize="30sp"/>
+            android:textSize="20sp"/>
 
         <!--Text view to display the updated number when data
          will fetch from the API. For now default set to 0 -->
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0"
             android:id="@+id/tvTotalDeaths"
-            android:textAlignment="center"
-            android:textSize="25sp"
+            android:layout_toEndOf="@+id/totalDeaths"
+            android:layout_alignTop="@id/totalDeaths"
+            android:layout_marginStart="15dp"
+            android:textSize="20sp"
             android:textColor="@color/color_one"
             android:textStyle="bold"
             android:fontFamily="sans-serif-light" />
 
-        <!--Text view to display Today Deaths-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:text="Today Deaths"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:textSize="30sp"/>
+    </RelativeLayout>
 
-        <!--Text view to display the updated number when data
-         will fetch from the API. For now default set to 0 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:id="@+id/tvTodayDeaths"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:textColor="@color/color_one"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-light" />
-
-        <!--Text view to display Affected Countries-->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:text="Affected Countries"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:textSize="30sp"/>
-
-        <!--Text view to display the updated number when data
-         will fetch from the API. For now default set to 0 -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:id="@+id/tvAffectedCountries"
-            android:textAlignment="center"
-            android:textSize="25sp"
-            android:textColor="@color/color_one"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-light" />
-
-    </LinearLayout>
-
-</RelativeLayout>
+</ScrollView>

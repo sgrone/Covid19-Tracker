@@ -23,38 +23,6 @@ public class DataHandler {
         this.tvCases = tvCases;
     }
 
-    public String getTvRecovered() {
-        return tvRecovered;
-    }
-
-    public void setTvRecovered(String tvRecovered) {
-        this.tvRecovered = tvRecovered;
-    }
-
-    public String getTvCritical() {
-        return tvCritical;
-    }
-
-    public void setTvCritical(String tvCritical) {
-        this.tvCritical = tvCritical;
-    }
-
-    public String getTvActive() {
-        return tvActive;
-    }
-
-    public void setTvActive(String tvActive) {
-        this.tvActive = tvActive;
-    }
-
-    public String getTvTodayCases() {
-        return tvTodayCases;
-    }
-
-    public void setTvTodayCases(String tvTodayCases) {
-        this.tvTodayCases = tvTodayCases;
-    }
-
     public String getTvTotalDeaths() {
         return tvTotalDeaths;
     }
@@ -63,30 +31,8 @@ public class DataHandler {
         this.tvTotalDeaths = tvTotalDeaths;
     }
 
-    public String getTvTodayDeaths() {
-        return tvTodayDeaths;
-    }
-
-    public void setTvTodayDeaths(String tvTodayDeaths) {
-        this.tvTodayDeaths = tvTodayDeaths;
-    }
-
-    public String getTvAffectedCountries() {
-        return tvAffectedCountries;
-    }
-
-    public void setTvAffectedCountries(String tvAffectedCountries) {
-        this.tvAffectedCountries = tvAffectedCountries;
-    }
-
     private String tvCases = "Invalid";
-    private String tvRecovered = "Invalid";
-    private String tvCritical = "Invalid";
-    private String tvActive = "Invalid";
-    private String tvTodayCases = "Invalid";
     private String tvTotalDeaths = "Invalid";
-    private String tvTodayDeaths = "Invalid";
-    private String tvAffectedCountries = "Invalid";
     private Context context;
 
     public DataHandler(Context context) {
@@ -106,18 +52,13 @@ public class DataHandler {
                 try {
                     // Creating object of JSONObject
                     JSONObject jsonObject = new JSONObject(response.toString());
-
                     // Set the data in text view
                     // which are available in JSON format
                     // Note that the parameter inside
                     // the getString() must match
                     // with the name given in JSON format
                     tvCases = jsonObject.getString("cases");
-                    tvActive = jsonObject.getString("active");
-                    tvTodayCases = jsonObject.getString("todayCases");
                     tvTotalDeaths = jsonObject.getString("deaths");
-                    tvTodayDeaths = jsonObject.getString("todayDeaths");
-                    tvAffectedCountries = jsonObject.getString("affectedCountries");
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

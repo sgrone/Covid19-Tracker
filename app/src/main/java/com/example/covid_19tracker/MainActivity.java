@@ -34,11 +34,7 @@ public class MainActivity
         // Link those objects with their respective id's
         // that we have given in .XML file
         tvCases = findViewById(R.id.tvCases);
-        tvActive = findViewById(R.id.tvActive);
-        tvTodayCases = findViewById(R.id.tvTodayCases);
         tvTotalDeaths = findViewById(R.id.tvTotalDeaths);
-        tvTodayDeaths = findViewById(R.id.tvTodayDeaths);
-        tvAffectedCountries = findViewById(R.id.tvAffectedCountries);
         this.handler = new DataHandler(this.getApplicationContext());
 
         Spinner stateSpinner = findViewById(R.id.stateSpinner);
@@ -62,11 +58,7 @@ public class MainActivity
 
     private void updateView() {
         tvCases.setText(handler.getTvCases());
-        tvActive.setText(handler.getTvActive());
-        tvTodayCases.setText(handler.getTvTodayCases());
         tvTotalDeaths.setText(handler.getTvTotalDeaths());
-        tvTodayDeaths.setText(handler.getTvTodayDeaths());
-        tvAffectedCountries.setText(handler.getTvAffectedCountries());
     }
 
     @Override
