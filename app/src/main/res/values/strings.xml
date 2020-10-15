@@ -54,4 +54,16 @@
         <item>Wyoming</item>
     </string-array>
 
+    <string-array name="metrics">
+        <item>Weekly Cases</item>
+        <item>Weekly Deaths</item>
+        <item>Total Cases</item>
+        <item>Total Deaths</item>
+    </string-array>
+
+    <string-array name="sortOptions">
+        <item>Ascending</item>
+        <item>Descending</item>
+    </string-array>
+
 </resources>
