@@ -11,7 +11,15 @@
         android:layout_height="wrap_content"
         android:textSize="40sp"
         android:id="@+id/stateName"
+        android:layout_centerHorizontal="true"/>
+
+    <ImageView
+        android:id="@+id/stateMap"
+        android:layout_width="200dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="15dp"
+        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"/>
+        android:contentDescription="Picture of state" />
 
 </RelativeLayout>
