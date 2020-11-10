@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class MainActivity
     Spinner stateSpinner;
     Spinner metricSpinner;
     Spinner sortSpinner;
+    Button fetchDataBtn;
     Button viewChanceBtn;
 
     @Override
@@ -72,7 +74,15 @@ public class MainActivity
         sortSpinner.setOnItemSelectedListener(this);
 
         // Button Creation
+        fetchDataBtn = (Button) findViewById(R.id.fetchDataBtn);
         viewChanceBtn = (Button) findViewById(R.id.viewChangeBtn);
+
+        fetchDataBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                fetchData();
+            }
+        });
 
         viewChanceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -80,6 +90,12 @@ public class MainActivity
                 openActivity2();
             }
         });
+    }
+
+    public void fetchData() {
+        //TEMP:
+        Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);
+        toast.show();
     }
 
     private void updateView() {
