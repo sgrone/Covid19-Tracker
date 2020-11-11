@@ -42,7 +42,7 @@ public class MainActivity
         tvCases = findViewById(R.id.tvCases);
         tvTotalDeaths = findViewById(R.id.tvTotalDeaths);
         sortedStateList = findViewById(R.id.sortedStateList);
-        this.handler = new DataHandler(this.getApplicationContext());
+
 
         // Updates the TextViews with JQuery Data
         updateView();
@@ -94,13 +94,14 @@ public class MainActivity
 
     public void fetchData() {
         //TEMP:
+        this.handler = new DataHandler(this.getApplicationContext());
         Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);
         toast.show();
     }
 
     private void updateView() {
-        tvCases.setText(handler.getTvCases());
-        tvTotalDeaths.setText(handler.getTvTotalDeaths());
+        //tvCases.setText(handler.getTvCases());
+        //tvTotalDeaths.setText(handler.getTvTotalDeaths());
     }
 
     @Override
