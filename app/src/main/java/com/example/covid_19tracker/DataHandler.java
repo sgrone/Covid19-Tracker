@@ -75,7 +75,7 @@ public class DataHandler {
 
                             //stateID.add(data.getString("state"));
                             StateData newState = new StateData();
-                            newState.setState(tempState);
+                            newState.setStateName(tempState);
 
                             if (data.getString("positive") != null) {
                                 //positiveResults.add(data.getString("positive"));
