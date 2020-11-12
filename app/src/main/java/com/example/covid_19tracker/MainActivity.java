@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,6 +21,8 @@ public class MainActivity
         extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     public static final String EXTRA_TEXT = "com.example.covid_19tracker.EXTRA_TEXT";
     private ArrayList<String> tempStateList = new ArrayList<String>();
+
+    public ArrayList<StateData> stateList;
 
     // Create the object of TextView
     TextView tvCases, tvTotalDeaths, sortedStateList;
@@ -93,10 +96,22 @@ public class MainActivity
     }
 
     public void fetchData() {
-        //TEMP:
+        //Test check to see if fetchData recognizes stateList as already filled with
+        // data if you click it a second time.
+        if(stateList!= null && stateList.size() > 0){
+            int testLength = stateList.size();
+
+            Log.i("Check", "ArrayList SECONDARY Length Check: " + testLength);
+        }
+        this.stateList = new ArrayList<StateData>();
         this.handler = new DataHandler(this.getApplicationContext());
+        stateList = handler.pullData(stateList);
         Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);
         toast.show();
+
+        int testLength = stateList.size();
+
+        Log.i("Check", "ArrayList Length Check: " + testLength);
     }
 
     private void updateView() {
@@ -183,4 +198,3 @@ public class MainActivity
 
 
 }
-
