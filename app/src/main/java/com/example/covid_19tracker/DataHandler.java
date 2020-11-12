@@ -18,9 +18,6 @@ import java.util.Vector;
 /*
  * */
 public class DataHandler {
-    //private String[] stateInitial = {"AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "FL", "GA", "HI", "ID", "IL", "IN", "IA", "KS",
-    //"KY", "LA", "ME", "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH", "NJ", "NM", "NY", "NC", "ND", "OH",
-    //"OK", "OR", "PA", "RI", "SC","SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI", "WY"};
 
     private Context context;
     RequestQueue requestQueue;
@@ -75,7 +72,7 @@ public class DataHandler {
 
                             //stateID.add(data.getString("state"));
                             StateData newState = new StateData();
-                            newState.setStateName(tempState);
+                            newState.setStateInitials(tempState);
 
                             if (data.getString("positive") != null) {
                                 //positiveResults.add(data.getString("positive"));
