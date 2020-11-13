@@ -14,24 +14,26 @@ public class Activity2 extends AppCompatActivity {
 
     private TextView stateName;
     private ImageView stateImage;
-    private String currentState;
+    private StateData currentState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_2);
 
+        // Pull current state object from first screen
         Intent intent = getIntent();
-        currentState = intent.getStringExtra(MainActivity.EXTRA_TEXT);
+        currentState = (StateData)intent.getSerializableExtra("currentState");
 
+        // Update screen information
         stateName = (TextView) findViewById(R.id.stateName);
         stateImage = findViewById(R.id.stateMap);
-        stateName.setText(currentState);
+        stateName.setText(currentState.getStateName());
         setStateImage();
     }
 
     private void setStateImage() {
-        switch(currentState) {
+        switch(currentState.getStateName()) {
             case "Alabama":
                 stateImage.setImageResource(R.drawable.ic_alabama);
                 break;
@@ -185,9 +187,10 @@ public class Activity2 extends AppCompatActivity {
             default:
                 break;
         }
-        setStateColor(1500); //ADD CALL TO STATES CURRENT NUMBERS
+        setStateColor(currentState.getPosResult()); //ADD CALL TO STATES CURRENT NUMBERS
     }
 
+    // NOTE: Colors can be accessed in app --> res --> values --> colors.xml
     private void setStateColor(int cases) {
         if (cases < 250)
             stateImage.setColorFilter(ContextCompat.getColor(this, R.color.best));

@@ -16,25 +16,27 @@ import android.widget.Toast;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MainActivity
         extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
-    public static final String EXTRA_TEXT = "com.example.covid_19tracker.EXTRA_TEXT";
-    private ArrayList<String> tempStateList = new ArrayList<String>();
+    /*---------------------------------------------------
+        GLOBAL VARIABLES
+      ---------------------------------------------------*/
+    private ArrayList<StateData> tempStateList = new ArrayList<StateData>(); // REPLACE ALL REFERENCES WITH stateList
+    private ArrayList<StateData> stateList;
+    private final static int CASES = 1, DEATHS = 2, HOSPITALIZED = 3;
+    private final static int ASC = 1, DESC = 2;
+    private int metric = CASES, sortBy = ASC;
+    private TextView sortedStateList;
+    private StateData currentState;
+    private DataHandler handler;
+    private Spinner stateSpinner, metricSpinner, sortSpinner;
+    private Button fetchDataBtn, viewChanceBtn;
 
-    public ArrayList<StateData> stateList;
-
-    // Create the object of TextView
-    TextView tvCases, tvTotalDeaths, sortedStateList;
-
-    String currentState = "Michigan";
-    DataHandler handler;
-    Spinner stateSpinner;
-    Spinner metricSpinner;
-    Spinner sortSpinner;
-    Button fetchDataBtn;
-    Button viewChanceBtn;
-
+    /*---------------------------------------------------
+        This method will run when the app is loaded
+      ---------------------------------------------------*/
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,17 +44,13 @@ public class MainActivity
 
         // Link those objects with their respective id's
         // that we have given in .XML file
-        tvCases = findViewById(R.id.tvCases);
-        tvTotalDeaths = findViewById(R.id.tvTotalDeaths);
         sortedStateList = findViewById(R.id.sortedStateList);
-
-
-        // Updates the TextViews with JQuery Data
-        updateView();
-        spinnerSetup();
-        populateStateList();
+        spinnerSetup(); // Initialize spinners (drop-down lists)
     }
 
+    /*---------------------------------------------------
+        Drop-down menu setup
+     ---------------------------------------------------*/
     private void spinnerSetup() {
         stateSpinner = findViewById(R.id.stateSpinner);
         metricSpinner = findViewById(R.id.metricSpinner);
@@ -63,19 +61,21 @@ public class MainActivity
         stateSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         stateSpinner.setAdapter(stateSpinnerAdapter);
         stateSpinner.setOnItemSelectedListener(this);
-        stateSpinner.setSelection(21);
+        stateSpinner.setSelection(21); // Michigan by default
 
         //metricSpinner setup
         ArrayAdapter<CharSequence> metricSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.metrics, android.R.layout.simple_spinner_item);
         metricSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         metricSpinner.setAdapter(metricSpinnerAdapter);
         metricSpinner.setOnItemSelectedListener(this);
+        metricSpinner.setSelection(1); // Cases by default
 
         //sortSpinner setup
         ArrayAdapter<CharSequence> sortSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.sortOptions, android.R.layout.simple_spinner_item);
         sortSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         sortSpinner.setAdapter(sortSpinnerAdapter);
         sortSpinner.setOnItemSelectedListener(this);
+        sortSpinner.setSelection(0); // Ascending by default
 
         // Button Creation
         fetchDataBtn = (Button) findViewById(R.id.fetchDataBtn);
@@ -84,22 +84,28 @@ public class MainActivity
         fetchDataBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                fetchData();
+                fetchData(); // This will collect data from DataHanndler and load it into StateData objects
+                // which get stored in stateList ArrayList
             }
         });
 
         viewChanceBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openActivity2();
+                openActivity2(); // Open second screen on app
             }
         });
     }
 
+    /*---------------------------------------------------
+        Runs DataHandler class
+        Will create ArrayList of StateData objects for each state
+        Use getter methods on state class to access data
+    ---------------------------------------------------*/
     public void fetchData() {
         //Test check to see if fetchData recognizes stateList as already filled with
         // data if you click it a second time.
-        if(stateList!= null && stateList.size() > 0){
+        if (stateList != null && stateList.size() > 0) {
             int testLength = stateList.size();
 
             Log.i("Check", "ArrayList SECONDARY Length Check: " + testLength);
@@ -107,6 +113,7 @@ public class MainActivity
         this.stateList = new ArrayList<StateData>();
         this.handler = new DataHandler(this.getApplicationContext());
         stateList = handler.pullData(stateList);
+        populateStateList();
         Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);
         toast.show();
 
@@ -115,23 +122,37 @@ public class MainActivity
         Log.i("Check", "ArrayList Length Check: " + testLength);
     }
 
-    private void updateView() {
-        //tvCases.setText(handler.getTvCases());
-        //tvTotalDeaths.setText(handler.getTvTotalDeaths());
-    }
-
+    /*---------------------------------------------------
+        Determine what occurs when selected drop-down items change
+    ---------------------------------------------------*/
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        switch(adapterView.getId()) {
+        switch (adapterView.getId()) {
             case R.id.stateSpinner:
-                currentState = adapterView.getItemAtPosition(i).toString();
-                updateView();
+                currentState = selectState(adapterView.getItemAtPosition(i).toString());
                 break;
             case R.id.metricSpinner:
-                //TO_DO add method to change metric that states are sorted by
+                if (adapterView.getItemAtPosition(i).toString().equals("Total Cases")) {
+                    setMetric(CASES);
+                }
+                if (adapterView.getItemAtPosition(i).toString().equals("Total Deaths")) {
+                    setMetric(DEATHS);
+                }
+                if (adapterView.getItemAtPosition(i).toString().equals("Currently Hospitalized")) {
+                    setMetric(HOSPITALIZED);
+                }
+
+                sortStateList(getMetric(), getSortBy());
                 break;
             case R.id.sortSpinner:
-                //TO_DO add method to change ascending or descening
+                if (adapterView.getItemAtPosition(i).toString().equals("Ascending")) {
+                    setSortBy(ASC);
+                }
+                if (adapterView.getItemAtPosition(i).toString().equals("Descending")) {
+                    setSortBy(DESC);
+                }
+
+                sortStateList(getMetric(), getSortBy());
                 break;
             default:
                 Toast toast = Toast.makeText(this, "ERROR WITH SPINNERS", Toast.LENGTH_SHORT);
@@ -145,70 +166,176 @@ public class MainActivity
         //
     }
 
+    /*---------------------------------------------------
+        Switches to screen 2
+        Sends current stateObject selected with stateSpinner (MI by default)
+    ---------------------------------------------------*/
     public void openActivity2() {
         Intent intent = new Intent(this, Activity2.class);
-        intent.putExtra(EXTRA_TEXT, currentState);
-        startActivity(intent);
+        intent.putExtra("currentState", currentState);
+        if (currentState != null)
+            startActivity(intent);
+        else {
+            Toast toast = Toast.makeText(this, "State data not found", Toast.LENGTH_SHORT);
+            toast.show();
+        }
     }
 
+    /*---------------------------------------------------
+        UPDATE
+        Currently a dummy-list of 5 states is created for testing purposes
+    ---------------------------------------------------*/
     private void populateStateList() {
-        String stateString = "";
-        tempStateList.add("Alabama");
-        tempStateList.add("Alaska");
-        tempStateList.add("Arizona");
-        tempStateList.add("Arkansas");
-        tempStateList.add("California");
-        tempStateList.add("Colorado");
-        tempStateList.add("Connecticut");
-        tempStateList.add("Delaware");
-        tempStateList.add("Florida");
-        tempStateList.add("Georgia");
-        tempStateList.add("Hawaii");
-        tempStateList.add("Idaho");
-        tempStateList.add("Illinois");
-        tempStateList.add("Indiana");
-        tempStateList.add("Iowa");
-        tempStateList.add("Kansas");
-        tempStateList.add("Kentucky");
-        tempStateList.add("Louisiana");
-        tempStateList.add("Maine");
-        tempStateList.add("Maryland");
-        tempStateList.add("Massachusets");
-        tempStateList.add("Michigan");
-        tempStateList.add("Minnesota");
-        tempStateList.add("Mississippi");
-        tempStateList.add("Missouri");
-        tempStateList.add("Montana");
-        tempStateList.add("Nebraska");
-        tempStateList.add("Nevada");
-        tempStateList.add("New Hampshire");
-        tempStateList.add("New Jersey");
-        tempStateList.add("New Mexico");
-        tempStateList.add("New York");
-        tempStateList.add("North Carolina");
-        tempStateList.add("North Dakota");
-        tempStateList.add("Ohio");
-        tempStateList.add("Oklahoma");
-        tempStateList.add("Oregon");
-        tempStateList.add("Pennsylvania");
-        tempStateList.add("Rhode Island");
-        tempStateList.add("South Carolina");
-        tempStateList.add("South Dakota");
-        tempStateList.add("Tennessee");
-        tempStateList.add("Texas");
-        tempStateList.add("Utah");
-        tempStateList.add("Vermont");
-        tempStateList.add("Virginia");
-        tempStateList.add("Washington");
-        tempStateList.add("West Virginia");
-        tempStateList.add("Wisconsin");
-        tempStateList.add("Wyoming");
 
+        // TEMP STATE DATA
+        StateData california = new StateData();
+        california.setStateInitials("CA");
+        california.setDeaths(50000);
+        california.setHospCur(2000);
+        california.setPosResult(249);
+
+        StateData michigan = new StateData();
+        michigan.setStateInitials("MI");
+        michigan.setDeaths(3500);
+        michigan.setHospCur(1570);
+        michigan.setPosResult(499);
+
+        StateData florida = new StateData();
+        florida.setStateInitials("FL");
+        florida.setDeaths(4500);
+        florida.setHospCur(1600);
+        florida.setPosResult(9999);
+
+        StateData ohio = new StateData();
+        ohio.setStateInitials("OH");
+        ohio.setDeaths(5600);
+        ohio.setHospCur(800);
+        ohio.setPosResult(1999);
+
+        StateData texas = new StateData();
+        texas.setStateInitials("TX");
+        texas.setDeaths(1000);
+        texas.setHospCur(10000);
+        texas.setPosResult(3999);
+
+        // TO_DO - REPLACE tempStateList WITH stateList ONCE IMPLEMENTED
+        tempStateList.add(california);
+        tempStateList.add(michigan);
+        tempStateList.add(florida);
+        tempStateList.add(ohio);
+        tempStateList.add(texas);
+
+        currentState = michigan;
+
+        sortStateList(getMetric(), getSortBy());
+    }
+
+    /*---------------------------------------------------
+        When a state in chosen in stateSpinner, this method
+        matches that state to a state in stateList
+    ---------------------------------------------------*/
+    public StateData selectState(String stateName) {
+        StateData current = null;
+        for (int i = 0; i < tempStateList.size(); i++) {
+            if (stateName.equals(tempStateList.get(i).getStateName()))
+                current = tempStateList.get(i);
+        }
+        return current;
+    }
+
+    /*---------------------------------------------------
+        Prints sorted list of states at bottom of app
+    ---------------------------------------------------*/
+    public void printStateList() {
+        String stateString = "";
         for (int i = 0; i < tempStateList.size(); i++) {
             Integer temp = i + 1;
-            stateString = stateString + temp.toString() + ". " + tempStateList.get(i) + "\n";
+            stateString = stateString + temp.toString() + ". " + tempStateList.get(i).getStateName() + "\n";
         }
         sortedStateList.setText(stateString);
+    }
+
+    /*---------------------------------------------------
+        This method will sort the states based on parameters selected in
+        metricSpinner and sortSpinner
+
+        code modified from Rajat Mishra's bubble sort
+        on https://geeksforgeeks.org/bubble-sort/
+    ---------------------------------------------------*/
+    public void sortStateList(int metric, int sortBy) {
+        //SORT BY CASES
+        if (metric == CASES) {
+            // Sort by ASC
+            int n = tempStateList.size();
+            for (int i = 0; i < n - 1; i++) {
+                for (int j = 0; j < n - i - 1; j++) {
+                    if (tempStateList.get(j).getPosResult() > tempStateList.get(j + 1).getPosResult()) {
+                        StateData temp = tempStateList.get(j);
+                        tempStateList.set(j, tempStateList.get(j + 1));
+                        tempStateList.set(j + 1, temp);
+                    }
+                }
+            }
+            // IF DESC, reverse order
+            if (sortBy == DESC) {
+                Collections.reverse(tempStateList);
+            }
+        }
+
+        //SORT BY DEATHS
+        if (metric == DEATHS) {
+            // Sort by ASC
+            int n = tempStateList.size();
+            for (int i = 0; i < n - 1; i++) {
+                for (int j = 0; j < n - i - 1; j++) {
+                    if (tempStateList.get(j).getDeaths() > tempStateList.get(j + 1).getDeaths()) {
+                        StateData temp = tempStateList.get(j);
+                        tempStateList.set(j, tempStateList.get(j + 1));
+                        tempStateList.set(j + 1, temp);
+                    }
+                }
+            }
+            // IF DESC, reverse order
+            if (sortBy == DESC) {
+                Collections.reverse(tempStateList);
+            }
+        }
+
+        //SORT BY HOSPITALIZATIONS
+        if (metric == HOSPITALIZED) {
+            // Sort by ASC
+            int n = tempStateList.size();
+            for (int i = 0; i < n - 1; i++) {
+                for (int j = 0; j < n - i - 1; j++) {
+                    if (tempStateList.get(j).getHospCur() > tempStateList.get(j + 1).getHospCur()) {
+                        StateData temp = tempStateList.get(j);
+                        tempStateList.set(j, tempStateList.get(j + 1));
+                        tempStateList.set(j + 1, temp);
+                    }
+                }
+            }
+            // IF DESC, reverse order
+            if (sortBy == DESC) {
+                Collections.reverse(tempStateList);
+            }
+        }
+        printStateList();
+    }
+
+    public int getMetric() {
+        return metric;
+    }
+
+    public void setMetric(int metric) {
+        this.metric = metric;
+    }
+
+    public int getSortBy() {
+        return sortBy;
+    }
+
+    public void setSortBy(int sortBy) {
+        this.sortBy = sortBy;
     }
 
 

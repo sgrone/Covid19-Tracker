@@ -15,8 +15,7 @@
         android:layout_height="wrap_content"
         android:padding="20dp">
 
-        <!--Text view to display Global stats-->
-
+        <!-- Display Title : "COVID- 19 TRACKER -->
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
@@ -27,6 +26,7 @@
             android:textSize="50sp"
             android:textStyle="bold" />
 
+        <!--TEMP BUTTON TO FETCH JSON DATA-->
         <Button
             android:layout_width="200dp"
             android:layout_height="50dp"
@@ -39,6 +39,7 @@
             android:textSize="25sp"
             android:text="FETCH DATA" />
 
+        <!--TEXT: SEARCH BY STATE-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -52,6 +53,7 @@
             android:textColor="@android:color/black"
             android:textSize="25sp"/>
 
+        <!--SPINNER TO SELECT A STATE-->
         <Spinner
             android:layout_width="200dp"
             android:layout_height="40dp"
@@ -63,6 +65,7 @@
             android:textSize="25sp"
             android:textStyle="bold" />
 
+        <!--BUTTON TO MOVE TO SECOND ACTIVITY WITH SELECTED CURRENT STATE-->
         <Button
             android:id="@+id/viewChangeBtn"
             android:layout_width="75dp"
@@ -73,7 +76,7 @@
             android:layout_toEndOf="@+id/stateSpinner"
             android:text="GO" />
 
-
+        <!--HEATMAP-->
         <fragment
             android:id="@+id/heatMap"
             android:contentDescription="Heatmap"
@@ -85,75 +88,21 @@
             android:layout_height="150dp"
             tools:context=".MapActivity" />
 
-        <!--Text view to display Total Cases-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:id="@+id/totalCases"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="15dp"
-            android:layout_below="@+id/heatMap"
-            android:text="Total World Cases:"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
-
-        <!--Text view to display the updated number when data
-         will fetch from the API. For now default set to 0 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:id="@+id/tvCases"
-            android:layout_toEndOf="@+id/totalCases"
-            android:layout_alignTop="@id/totalCases"
-            android:layout_marginStart="15dp"
-            android:textSize="20sp"
-            android:textColor="@color/color_one"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-light"/>
-
-        <!--Text view to display Total Deaths-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:id="@+id/totalDeaths"
-            android:layout_below="@+id/totalCases"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="5dp"
-            android:text="Total World Deaths:"
-            android:textStyle="bold"
-            android:textSize="20sp"/>
-
-        <!--Text view to display the updated number when data
-         will fetch from the API. For now default set to 0 -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="0"
-            android:id="@+id/tvTotalDeaths"
-            android:layout_toEndOf="@+id/totalDeaths"
-            android:layout_alignTop="@id/totalDeaths"
-            android:layout_marginStart="15dp"
-            android:textSize="20sp"
-            android:textColor="@color/color_one"
-            android:textStyle="bold"
-            android:fontFamily="sans-serif-light" />
-
+        <!--TEXT: SORT BY-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
             android:id="@+id/sortBy"
-            android:layout_below="@+id/totalDeaths"
+            android:layout_below="@+id/heatMap"
             android:layout_marginStart="5dp"
-            android:layout_marginTop="15dp"
+            android:layout_marginTop="25dp"
             android:textColor="@android:color/black"
             android:text="Sort By:"
             android:textStyle="bold"
             android:textSize="25sp"/>
 
+        <!--SPINNER: SORTING METRIC-->
         <Spinner
             android:layout_width="175dp"
             android:layout_height="40dp"
@@ -164,6 +113,7 @@
             android:layout_below="@+id/sortBy"
             android:textStyle="bold"/>
 
+        <!--SPINNER: SELECT SORT BY ASCENDING OR DESCENDING-->
         <Spinner
             android:layout_width="175dp"
             android:layout_height="40dp"
@@ -175,6 +125,7 @@
             android:layout_alignTop="@+id/metricSpinner"
             android:textStyle="bold"/>
 
+        <!--TEXTVIEW TO HOLD SORTED LIST OF STATES-->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

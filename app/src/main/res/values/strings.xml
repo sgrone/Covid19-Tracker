@@ -55,8 +55,7 @@
     </string-array>
 
     <string-array name="metrics">
-        <item>Weekly Cases</item>
-        <item>Weekly Deaths</item>
+        <item>Currently Hospitalized</item>
         <item>Total Cases</item>
         <item>Total Deaths</item>
     </string-array>
