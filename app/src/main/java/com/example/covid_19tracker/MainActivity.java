@@ -60,6 +60,7 @@ public class MainActivity
         stateSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         stateSpinner.setAdapter(stateSpinnerAdapter);
         stateSpinner.setOnItemSelectedListener(this);
+        stateSpinner.setSelection(21);
 
         //metricSpinner setup
         ArrayAdapter<CharSequence> metricSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.metrics, android.R.layout.simple_spinner_item);
@@ -105,8 +106,22 @@ public class MainActivity
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        currentState = adapterView.getItemAtPosition(i).toString();
-        updateView();
+        switch(adapterView.getId()) {
+            case R.id.stateSpinner:
+                currentState = adapterView.getItemAtPosition(i).toString();
+                updateView();
+                break;
+            case R.id.metricSpinner:
+                //TO_DO add method to change metric that states are sorted by
+                break;
+            case R.id.sortSpinner:
+                //TO_DO add method to change ascending or descening
+                break;
+            default:
+                Toast toast = Toast.makeText(this, "ERROR WITH SPINNERS", Toast.LENGTH_SHORT);
+                toast.show();
+                break;
+        }
     }
 
     @Override
