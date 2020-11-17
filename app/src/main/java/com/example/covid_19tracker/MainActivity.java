@@ -15,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.CameraPosition;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -337,6 +340,5 @@ public class MainActivity
     public void setSortBy(int sortBy) {
         this.sortBy = sortBy;
     }
-
 
 }

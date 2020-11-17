@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -78,15 +77,22 @@
 
         <!--HEATMAP-->
         <fragment
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+
             android:id="@+id/heatMap"
             android:contentDescription="Heatmap"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_below="@+id/viewChangeBtn"
             android:layout_marginTop="15dp"
             android:layout_centerHorizontal="true"
-            android:name="com.google.android.gms.maps.SupportMapFragment"
             android:layout_width="200dp"
             android:layout_height="150dp"
-            tools:context=".MapActivity" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:layout="@layout/amu_webview"
+            />
 
         <!--TEXT: SORT BY-->
         <TextView
