@@ -25,18 +25,19 @@ public class HeatmapActivity extends MapActivity {
 
 
     //read in data from JSON file
-    public void readFile()
+    public List<LatLng> readFile()
     {
         try {
             latLngs = readItems(R.raw.states_locations);
         } catch (JSONException e) {
             Toast.makeText(context, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
         }
+        return latLngs;
     }
 
     //create heat map tile provider and pass it state coordinates
     HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
-            .data(latLngs)
+            .data(readFile())
             .build();
 
     TileOverlay overlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
