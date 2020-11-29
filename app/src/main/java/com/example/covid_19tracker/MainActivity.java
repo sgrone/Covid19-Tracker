@@ -49,6 +49,9 @@ public class MainActivity
         // that we have given in .XML file
         sortedStateList = findViewById(R.id.sortedStateList);
         spinnerSetup(); // Initialize spinners (drop-down lists)
+
+        //Initial API data pulling.
+        fetchData();
     }
 
     /*---------------------------------------------------
@@ -106,19 +109,13 @@ public class MainActivity
         Use getter methods on state class to access data
     ---------------------------------------------------*/
     public void fetchData() {
-        //Test check to see if fetchData recognizes stateList as already filled with
-        // data if you click it a second time.
-        if (stateList != null && stateList.size() > 0) {
-            int testLength = stateList.size();
-
-            Log.i("Check", "ArrayList SECONDARY Length Check: " + testLength);
-        }
         this.stateList = new ArrayList<StateData>();
-        //this.handler = new DataHandler(this.getApplicationContext());
-        //stateList = handler.pullData(stateList);
         DataHandler dataPuller = new DataHandler(this.getApplicationContext(), this.stateList);
-        //dataPuller.setPriority(10);
         dataPuller.start();
+
+        /*While the Retrofit library does provide synchronously JSON pulling,
+        some actions in DataHandler don't behave synchronously without the use of join()
+        forcing the main thread (MainActivity) to wait for DataHandler.*/
         try {
             dataPuller.join();
         } catch (InterruptedException e) {
@@ -130,8 +127,8 @@ public class MainActivity
         Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);
         toast.show();
 
-        //int testLength = stateList.size();
-        //Log.i("Check", "ArrayList Length Check: " + testLength);
+        int testLength = stateList.size();
+        Log.i("Check", "ArrayList Length Check: " + testLength);
     }
 
     /*---------------------------------------------------

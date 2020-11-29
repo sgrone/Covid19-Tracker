@@ -4,11 +4,13 @@ import android.util.Log;
 
 import java.io.Serializable;
 
+/*
+* Data holding class that holds Covid-19 related data on a US State.*/
 public class StateData implements Serializable {
 
-    // State initials.
+    // State's initials.
     private String state;
-    // State name.
+    // State's name.
     private String stateName;
     // Number of positive Covid-19 tests in this state.
     private int positive;
@@ -17,6 +19,7 @@ public class StateData implements Serializable {
     // Number of reported people currently hospitalized from Covid-19 in this state.
     private int hospitalizedCurrently;
 
+    //Used to find the full name of a state based on the initials.
     private static final String[][] stateNameList = {{"AL", "Alabama"}, {"AK", "Alaska"}, {"AZ", "Arizona"},
             {"AR", "Arkansas"}, {"CA", "California"}, {"CO", "Colorado"}, {"CT", "Connecticut"},
             {"DE", "Delaware"}, {"FL", "Florida"}, {"GA", "Georgia"}, {"HI", "Hawaii"},
@@ -34,8 +37,6 @@ public class StateData implements Serializable {
     public StateData(){
     }
 
-    //I'll add better comments later.
-    //These are for getting individual values out of the Vector lists.
     public String getState() {
         return state;
     }
@@ -56,6 +57,11 @@ public class StateData implements Serializable {
         return hospitalizedCurrently;
     }
 
+    /*
+    * Sets this State's initials (state) and full name (StateName).
+    * The full name of a state is not pulled in when grabbing the Covid-19 data
+    * so it must be determined and set based on the initials.
+    * */
     public void setState(String id) {
         this.state = id;
         this.setStateName(id);
@@ -73,9 +79,10 @@ public class StateData implements Serializable {
         this.hospitalizedCurrently = hospCur;
     }
 
-    /*Given the intials of a state, traverse through the array stateNameList and
+    /*Given the initials of a state, traverse through the array stateNameList and
      * find the state name that matches the initials. Sets StateData's stateName variable equal to
-     * the found name.*/
+     * the found name.
+     * @return tempName - The full state name of the given state initials. N/A if no name is found.*/
     public static String findStateName(String initials) {
         String tempName = "N/A";
         int nameIndex = -1;
