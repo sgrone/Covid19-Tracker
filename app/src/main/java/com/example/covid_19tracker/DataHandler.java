@@ -2,25 +2,19 @@ package com.example.covid_19tracker;
 
 import android.content.Context;
 import android.util.Log;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.Volley;
-import com.android.volley.toolbox.JsonArrayRequest;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Vector;
+import java.util.List;
+
+import retrofit2.Call;
 
 
 /*
  * */
-public class DataHandler {
+public class DataHandler extends Thread {
 
     private Context context;
-    RequestQueue requestQueue;
 
     public String getTvCases() {
         return tvCases;
@@ -40,86 +34,50 @@ public class DataHandler {
 
     private String tvCases = "Invalid";
     private String tvTotalDeaths = "Invalid";
+    private ArrayList<StateData> tempStateList;
 
-    public DataHandler(Context context) {
+    public DataHandler(Context context, ArrayList<StateData> stateList) {
         this.context = context;
-        requestQueue = Volley.newRequestQueue(context);
     }
 
-    public ArrayList<StateData> pullData(ArrayList<StateData> states) {
-        final ArrayList<StateData> tempStateList = new ArrayList<>();
-
-        Log.i("Check", "pullData Method Check.");
-        // Create a String request
-        // using Volley Library
+    public void run() {
+        pullData();
+    }
+    public void pullData() {
+        tempStateList = new ArrayList<>();
         String url = "https://api.covidtracking.com/v1/states/current.json";
 
-        JsonArrayRequest request = new JsonArrayRequest(url, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                try {
-                    Log.i("Check", "Response Length: " + response.length());
-                    for (int x = 0; x < response.length(); x++) {
-                        JSONObject data = response.getJSONObject(x);
-                        String tempState = data.getString("state");
+        DataService service = ServiceGenerator.createService(DataService.class);
+        Call<List<StateData>> calledData = service.getData();
+        List<StateData> jArrayData = null;
 
-                        /*The States of America Samoa(AS), Puerto Rico(PR),
-                         * District of Columbia(DC), Guam(GU), Northern Marianas(MP),
-                         * and the Virgin Islands(VI) are ignored here.
-                         * */
-                        if (!(tempState.equals("AS") || tempState.equals("PR") || tempState.equals("DC") ||
-                                tempState.equals("GU") || tempState.equals("MP") || tempState.equals("VI"))) {
+        try {
+            jArrayData = calledData.execute().body();
+            Log.i("Check", "Check Check 1 2 3: " + jArrayData.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-                            //stateID.add(data.getString("state"));
-                            StateData newState = new StateData();
-                            newState.setStateInitials(tempState);
-
-                            if (data.getString("positive") != null) {
-                                //positiveResults.add(data.getString("positive"));
-                                newState.setPosResult(Integer.parseInt(data.getString("positive")));
-                            } else {
-                                //positiveResults.add("N/A");
-                                newState.setPosResult(-1);
-                            }
-
-                            if (data.getString("death") != null) {
-                                //deaths.add(data.getString("death"));
-                                newState.setDeaths(Integer.parseInt(data.getString("death")));
-                            } else {
-                                newState.setDeaths(-1);
-                                //deaths.add("N/A");
-                            }
-
-                            if (data.getString("hospitalizedCurrently") != null) {
-                                //hospitalizedCurrent.add(data.getString("hospitalizedCurrently"));
-                                newState.setHospCur(Integer.parseInt(data.getString("hospitalizedCurrently")));
-                            } else {
-                                //hospitalizedCurrent.add("N/A");
-                                newState.setHospCur(-1);
-                            }
-
-                            tempStateList.add(newState);
-
-                        }
-
-                        Log.i("Check", "State ID: " + data.getString("state"));
-                    }
-                    Log.i("Check", "For Loop Done,");
-
-                } catch (JSONException e) {
-                    Log.i("Check", "State Data Capture Failed!");
-                    e.printStackTrace();
-                }
+        for(StateData state : jArrayData){
+            state.setStateName(state.getState());
+            if( !(state.getStateName().equals("N/A")) ){
+                Log.i("Check", "Initials: " + state.getState() + " | Name: " + state.getStateName());
+                tempStateList.add(state);
             }
-        }, new Response.ErrorListener() {
-            @Override
-            // Handles errors that occur due to Volley
-            public void onErrorResponse(VolleyError error) {
-                Log.e("Volley", "Error");
-            }
-        });
+        }
 
-        requestQueue.add(request);
-        return(tempStateList);
+        /*if(tempStateList.size() > 0){
+            StateData test1 = tempStateList.get(0);
+            Log.i("Check", "First State Check: " + test1.getState());
+        }*/
     }
+
+    public ArrayList<StateData> getData(){
+        if(tempStateList != null){
+            return tempStateList;
+        }else{
+            return null;
+        }
+    }
+
 }

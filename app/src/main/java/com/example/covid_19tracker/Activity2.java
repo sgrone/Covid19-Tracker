@@ -187,7 +187,7 @@ public class Activity2 extends AppCompatActivity {
             default:
                 break;
         }
-        setStateColor(currentState.getPosResult()); //ADD CALL TO STATES CURRENT NUMBERS
+        setStateColor(currentState.getPositive()); //ADD CALL TO STATES CURRENT NUMBERS
     }
 
     // NOTE: Colors can be accessed in app --> res --> values --> colors.xml

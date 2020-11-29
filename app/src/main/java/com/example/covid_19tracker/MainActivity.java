@@ -114,15 +114,24 @@ public class MainActivity
             Log.i("Check", "ArrayList SECONDARY Length Check: " + testLength);
         }
         this.stateList = new ArrayList<StateData>();
-        this.handler = new DataHandler(this.getApplicationContext());
-        stateList = handler.pullData(stateList);
+        //this.handler = new DataHandler(this.getApplicationContext());
+        //stateList = handler.pullData(stateList);
+        DataHandler dataPuller = new DataHandler(this.getApplicationContext(), this.stateList);
+        //dataPuller.setPriority(10);
+        dataPuller.start();
+        try {
+            dataPuller.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        stateList = dataPuller.getData();
+
         populateStateList();
         Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);
         toast.show();
 
-        int testLength = stateList.size();
-
-        Log.i("Check", "ArrayList Length Check: " + testLength);
+        //int testLength = stateList.size();
+        //Log.i("Check", "ArrayList Length Check: " + testLength);
     }
 
     /*---------------------------------------------------
@@ -192,34 +201,34 @@ public class MainActivity
 
         // TEMP STATE DATA
         StateData california = new StateData();
-        california.setStateInitials("CA");
-        california.setDeaths(50000);
-        california.setHospCur(2000);
-        california.setPosResult(249);
+        california.setState("CA");
+        california.setDeath(50000);
+        california.setHospitalizedCurrently(2000);
+        california.setPositive(249);
 
         StateData michigan = new StateData();
-        michigan.setStateInitials("MI");
-        michigan.setDeaths(3500);
-        michigan.setHospCur(1570);
-        michigan.setPosResult(499);
+        michigan.setState("MI");
+        michigan.setDeath(3500);
+        michigan.setHospitalizedCurrently(1570);
+        michigan.setPositive(499);
 
         StateData florida = new StateData();
-        florida.setStateInitials("FL");
-        florida.setDeaths(4500);
-        florida.setHospCur(1600);
-        florida.setPosResult(9999);
+        florida.setState("FL");
+        florida.setDeath(4500);
+        florida.setHospitalizedCurrently(1600);
+        florida.setPositive(9999);
 
         StateData ohio = new StateData();
-        ohio.setStateInitials("OH");
-        ohio.setDeaths(5600);
-        ohio.setHospCur(800);
-        ohio.setPosResult(1999);
+        ohio.setState("OH");
+        ohio.setDeath(5600);
+        ohio.setHospitalizedCurrently(800);
+        ohio.setPositive(1999);
 
         StateData texas = new StateData();
-        texas.setStateInitials("TX");
-        texas.setDeaths(1000);
-        texas.setHospCur(10000);
-        texas.setPosResult(3999);
+        texas.setState("TX");
+        texas.setDeath(1000);
+        texas.setHospitalizedCurrently(10000);
+        texas.setPositive(3999);
 
         // TO_DO - REPLACE tempStateList WITH stateList ONCE IMPLEMENTED
         tempStateList.add(california);
@@ -272,7 +281,7 @@ public class MainActivity
             int n = tempStateList.size();
             for (int i = 0; i < n - 1; i++) {
                 for (int j = 0; j < n - i - 1; j++) {
-                    if (tempStateList.get(j).getPosResult() > tempStateList.get(j + 1).getPosResult()) {
+                    if (tempStateList.get(j).getPositive() > tempStateList.get(j + 1).getPositive()) {
                         StateData temp = tempStateList.get(j);
                         tempStateList.set(j, tempStateList.get(j + 1));
                         tempStateList.set(j + 1, temp);
@@ -291,7 +300,7 @@ public class MainActivity
             int n = tempStateList.size();
             for (int i = 0; i < n - 1; i++) {
                 for (int j = 0; j < n - i - 1; j++) {
-                    if (tempStateList.get(j).getDeaths() > tempStateList.get(j + 1).getDeaths()) {
+                    if (tempStateList.get(j).getDeath() > tempStateList.get(j + 1).getDeath()) {
                         StateData temp = tempStateList.get(j);
                         tempStateList.set(j, tempStateList.get(j + 1));
                         tempStateList.set(j + 1, temp);
@@ -310,7 +319,7 @@ public class MainActivity
             int n = tempStateList.size();
             for (int i = 0; i < n - 1; i++) {
                 for (int j = 0; j < n - i - 1; j++) {
-                    if (tempStateList.get(j).getHospCur() > tempStateList.get(j + 1).getHospCur()) {
+                    if (tempStateList.get(j).getHospitalizedCurrently() > tempStateList.get(j + 1).getHospitalizedCurrently()) {
                         StateData temp = tempStateList.get(j);
                         tempStateList.set(j, tempStateList.get(j + 1));
                         tempStateList.set(j + 1, temp);
