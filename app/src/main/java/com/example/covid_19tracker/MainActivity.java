@@ -124,7 +124,8 @@ public class MainActivity
         }
         stateList = dataPuller.getData();
 
-        populateStateList();
+        sortStateList(getMetric(), getSortBy());
+
         Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);
         toast.show();
 
@@ -196,7 +197,7 @@ public class MainActivity
         Currently a dummy-list of 5 states is created for testing purposes
     ---------------------------------------------------*/
     private void populateStateList() {
-
+        /*
         // TEMP STATE DATA
         StateData california = new StateData();
         california.setState("CA");
@@ -235,9 +236,7 @@ public class MainActivity
         tempStateList.add(ohio);
         tempStateList.add(texas);
 
-        currentState = michigan;
-
-        sortStateList(getMetric(), getSortBy());
+        currentState = michigan; */
     }
 
     /*---------------------------------------------------
@@ -246,9 +245,9 @@ public class MainActivity
     ---------------------------------------------------*/
     public StateData selectState(String stateName) {
         StateData current = null;
-        for (int i = 0; i < tempStateList.size(); i++) {
-            if (stateName.equals(tempStateList.get(i).getStateName()))
-                current = tempStateList.get(i);
+        for (int i = 0; i < stateList.size(); i++) {
+            if (stateName.equals(stateList.get(i).getStateName()))
+                current = stateList.get(i);
         }
         return current;
     }
@@ -258,9 +257,9 @@ public class MainActivity
     ---------------------------------------------------*/
     public void printStateList() {
         String stateString = "";
-        for (int i = 0; i < tempStateList.size(); i++) {
+        for (int i = 0; i < stateList.size(); i++) {
             Integer temp = i + 1;
-            stateString = stateString + temp.toString() + ". " + tempStateList.get(i).getStateName() + "\n";
+            stateString = stateString + temp.toString() + ". " + stateList.get(i).getStateName() + "\n";
         }
         sortedStateList.setText(stateString);
     }
@@ -276,57 +275,57 @@ public class MainActivity
         //SORT BY CASES
         if (metric == CASES) {
             // Sort by ASC
-            int n = tempStateList.size();
+            int n = stateList.size();
             for (int i = 0; i < n - 1; i++) {
                 for (int j = 0; j < n - i - 1; j++) {
-                    if (tempStateList.get(j).getPositive() > tempStateList.get(j + 1).getPositive()) {
-                        StateData temp = tempStateList.get(j);
-                        tempStateList.set(j, tempStateList.get(j + 1));
-                        tempStateList.set(j + 1, temp);
+                    if (stateList.get(j).getPositive() > stateList.get(j + 1).getPositive()) {
+                        StateData temp = stateList.get(j);
+                        stateList.set(j, stateList.get(j + 1));
+                        stateList.set(j + 1, temp);
                     }
                 }
             }
             // IF DESC, reverse order
             if (sortBy == DESC) {
-                Collections.reverse(tempStateList);
+                Collections.reverse(stateList);
             }
         }
 
         //SORT BY DEATHS
         if (metric == DEATHS) {
             // Sort by ASC
-            int n = tempStateList.size();
+            int n = stateList.size();
             for (int i = 0; i < n - 1; i++) {
                 for (int j = 0; j < n - i - 1; j++) {
-                    if (tempStateList.get(j).getDeath() > tempStateList.get(j + 1).getDeath()) {
-                        StateData temp = tempStateList.get(j);
-                        tempStateList.set(j, tempStateList.get(j + 1));
-                        tempStateList.set(j + 1, temp);
+                    if (stateList.get(j).getDeath() > stateList.get(j + 1).getDeath()) {
+                        StateData temp = stateList.get(j);
+                        stateList.set(j, stateList.get(j + 1));
+                        stateList.set(j + 1, temp);
                     }
                 }
             }
             // IF DESC, reverse order
             if (sortBy == DESC) {
-                Collections.reverse(tempStateList);
+                Collections.reverse(stateList);
             }
         }
 
         //SORT BY HOSPITALIZATIONS
         if (metric == HOSPITALIZED) {
             // Sort by ASC
-            int n = tempStateList.size();
+            int n = stateList.size();
             for (int i = 0; i < n - 1; i++) {
                 for (int j = 0; j < n - i - 1; j++) {
-                    if (tempStateList.get(j).getHospitalizedCurrently() > tempStateList.get(j + 1).getHospitalizedCurrently()) {
-                        StateData temp = tempStateList.get(j);
-                        tempStateList.set(j, tempStateList.get(j + 1));
-                        tempStateList.set(j + 1, temp);
+                    if (stateList.get(j).getHospitalizedCurrently() > stateList.get(j + 1).getHospitalizedCurrently()) {
+                        StateData temp = stateList.get(j);
+                        stateList.set(j, stateList.get(j + 1));
+                        stateList.set(j + 1, temp);
                     }
                 }
             }
             // IF DESC, reverse order
             if (sortBy == DESC) {
-                Collections.reverse(tempStateList);
+                Collections.reverse(stateList);
             }
         }
         printStateList();
