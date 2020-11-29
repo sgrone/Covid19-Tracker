@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 
 import java.lang.reflect.MalformedParameterizedTypeException;
@@ -53,6 +54,13 @@ public class MainActivity
 
         //Initial API data pulling.
         fetchData();
+        createMap();
+    }
+
+    private void createMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.heatMap);
+        MapActivity mapActivity = new MapActivity(this.getApplicationContext(), mapFragment);
     }
 
     /*---------------------------------------------------
