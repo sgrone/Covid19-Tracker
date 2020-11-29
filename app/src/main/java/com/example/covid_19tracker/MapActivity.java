@@ -1,7 +1,12 @@
 package com.example.covid_19tracker;
 
+import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
+import androidx.annotation.RawRes;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -11,6 +16,19 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.TileOverlay;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.maps.android.heatmaps.Gradient;
+import com.google.maps.android.heatmaps.HeatmapTileProvider;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class MapActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -49,8 +67,57 @@ public class MapActivity extends FragmentActivity implements OnMapReadyCallback 
 
         //show USA
         map.setLatLngBoundsForCameraTarget(usaBounds);
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(37.090200, -95.712900),2));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(USA.target, 2));
+
+        addHeatmap();
+    }
+
+    public void addHeatmap() {
+        List<LatLng> latLngs = null;
+        //read in data from JSON file
+
+        try {
+            latLngs = readItems(R.raw.states_locations);
+        } catch (JSONException e) {
+            Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
+        }
+
+        //create the gradient
+        int[] colors = {
+                Color.rgb(102, 225, 0), //green
+                Color.rgb(255, 0, 0) //red
+        };
+
+        float[] startPoints = {
+                0.2f, 1f
+        };
+
+        Gradient gradient = new Gradient(colors, startPoints);
+
+        //create heat map tile provider and pass it state coordinates and gradient
+        HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
+                .data(latLngs)
+                .gradient(gradient)
+                .build();
+
+        TileOverlay overlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
 
     }
 
+    public List<LatLng> readItems ( @RawRes int resource) throws JSONException {
+        List<LatLng> result = new ArrayList<>();
+        InputStream inputStream = this.getResources().openRawResource(resource);
+        String json = new Scanner(inputStream).useDelimiter("\\A").next();
+        JSONArray array = new JSONArray(json);
+        for (int i = 0; i < array.length(); i++) {
+            JSONObject object = array.getJSONObject(i);
+            double lat = object.getDouble("latitude");
+            double lng = object.getDouble("longitude");
+            result.add(new LatLng(lat, lng));
+        }
+        return result;
+    }
+
+
 }
+
