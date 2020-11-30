@@ -61,7 +61,8 @@ public class StateData implements Serializable {
     * Sets this State's initials (state) and full name (StateName).
     * The full name of a state is not pulled in when grabbing the Covid-19 data
     * so it must be determined and set based on the initials.
-    * */
+    */
+
     public void setState(String id) {
         this.state = id;
         this.setStateName(id);

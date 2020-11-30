@@ -27,7 +27,6 @@ public class MainActivity
     /*---------------------------------------------------
         GLOBAL VARIABLES
       ---------------------------------------------------*/
-    private ArrayList<StateData> tempStateList = new ArrayList<StateData>(); // REPLACE ALL REFERENCES WITH stateList
     private ArrayList<StateData> stateList;
     private final static int CASES = 1, DEATHS = 2, HOSPITALIZED = 3;
     private final static int ASC = 1, DESC = 2;
