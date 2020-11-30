@@ -19,6 +19,12 @@ public class StateData implements Serializable {
     // Number of reported people currently hospitalized from Covid-19 in this state.
     private int hospitalizedCurrently;
 
+    private int positiveIncrease;
+
+    private int deathIncrease;
+
+    private int hospitalizedIncrease;
+
     //Used to find the full name of a state based on the initials.
     private static final String[][] stateNameList = {{"AL", "Alabama"}, {"AK", "Alaska"}, {"AZ", "Arizona"},
             {"AR", "Arkansas"}, {"CA", "California"}, {"CO", "Colorado"}, {"CT", "Connecticut"},
@@ -57,6 +63,12 @@ public class StateData implements Serializable {
         return hospitalizedCurrently;
     }
 
+    public int getPositiveIncrease() {return positiveIncrease; }
+
+    public int getDeathIncrease() {return deathIncrease; }
+
+    public int getHospitalizedIncrease() {return hospitalizedIncrease; }
+
     /*
     * Sets this State's initials (state) and full name (StateName).
     * The full name of a state is not pulled in when grabbing the Covid-19 data
@@ -79,6 +91,12 @@ public class StateData implements Serializable {
     public void setHospitalizedCurrently(int hospCur) {
         this.hospitalizedCurrently = hospCur;
     }
+
+    public void setPositiveIncrease(int posIncrease){ this.positiveIncrease = posIncrease; }
+
+    public void setDeathIncrease(int deathsIncrease){ this.deathIncrease = deathsIncrease; }
+
+    public void setHospitalizedIncrease(int hospIncrease){ this.hospitalizedIncrease = hospIncrease; }
 
     /*Given the initials of a state, traverse through the array stateNameList and
      * find the state name that matches the initials. Sets StateData's stateName variable equal to
