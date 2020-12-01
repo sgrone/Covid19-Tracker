@@ -69,15 +69,16 @@ public class MapActivity extends FragmentActivity {
     }
 
     public static final CameraPosition USA =
-            new CameraPosition.Builder().target(new LatLng(37.090200, -95.712900))
-                    .zoom(50.5f)
+            //37.090200, -95.712900
+            new CameraPosition.Builder().target(new LatLng(51.887617, -110.547902))
+                    .zoom(0)
                     .bearing(0)
                     .tilt(0)
                     .build();
 
     LatLngBounds usaBounds = new LatLngBounds(
-            new LatLng(38.377654, -122.512669), //west bounds
-            new LatLng(38.652731, -75.227514) // east bounds
+            new LatLng(17.499635, -167.221229), //southwest bounds
+            new LatLng(75.979393, -64.743381) // northeast bounds
     );
 
 
