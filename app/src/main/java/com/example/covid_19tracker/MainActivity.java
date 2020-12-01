@@ -163,9 +163,17 @@ public class MainActivity
         Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);
         toast.show();
 
-        int testLength = stateList.size();
+        //Test code for checking if State data was pulled in correctly.
+        /*int testLength = stateList.size();
         Log.i("Check", "ArrayList Length Check: " + testLength);
+<<<<<<< HEAD
 
+=======
+        int test1 = stateList.get(0).getPositiveIncrease();
+        int test2 = stateList.get(3).getDeathIncrease();
+        int test3 = stateList.get(5).getHospitalizedIncrease();
+        Log.i("Check", "Variables Check: " + test1 + " | " + test2 + " | " + test3 + " | ");*/
+>>>>>>> ab18e36923b5cd78c4a082b6bcc3d0f8e20bc471
     }
 
     /*---------------------------------------------------
