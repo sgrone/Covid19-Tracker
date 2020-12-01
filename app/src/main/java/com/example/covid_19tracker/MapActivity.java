@@ -1,6 +1,7 @@
 package com.example.covid_19tracker;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -35,6 +36,7 @@ public class MapActivity extends FragmentActivity {
     private Context context;
     public GoogleMap map;
     SupportMapFragment mapFragment;
+    List<LatLng> latLngs = new ArrayList<>();
 
     public MapActivity(Context context, SupportMapFragment mapFragment) {
         this.context = context;
@@ -55,10 +57,15 @@ public class MapActivity extends FragmentActivity {
                 //show USA
                 map.setLatLngBoundsForCameraTarget(usaBounds);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(USA.target, 2));
-
-                addHeatmap();
             }
         });
+
+        //read in data from JSON file
+        try {
+            latLngs = readItems(R.raw.states_locations);
+        } catch (JSONException e) {
+            Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
+        }
     }
 
     public static final CameraPosition USA =
@@ -75,16 +82,7 @@ public class MapActivity extends FragmentActivity {
 
 
 
-    public void addHeatmap() {
-        List<LatLng> latLngs = null;
-        //read in data from JSON file
-
-        try {
-            latLngs = readItems(R.raw.states_locations);
-        } catch (JSONException e) {
-            Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
-        }
-
+    public void addHeatmap(List<LatLng> latLngCases) {
         //create the gradient
         int[] colors = {
                 Color.rgb(102, 225, 0), //green
@@ -99,12 +97,11 @@ public class MapActivity extends FragmentActivity {
 
         //create heat map tile provider and pass it state coordinates and gradient
         HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
-                .data(latLngs)
+                .data(latLngCases)
                 .gradient(gradient)
                 .build();
 
-        TileOverlay overlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
-
+        map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
     }
 
     public List<LatLng> readItems ( @RawRes int resource) throws JSONException {

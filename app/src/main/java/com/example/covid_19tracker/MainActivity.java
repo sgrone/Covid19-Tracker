@@ -18,10 +18,15 @@ import android.widget.Toast;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+
+import org.json.JSONException;
 
 import java.lang.reflect.MalformedParameterizedTypeException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EmptyStackException;
+import java.util.List;
 
 public class MainActivity
         extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
@@ -58,9 +63,30 @@ public class MainActivity
     }
 
     private void createMap() {
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.heatMap);
         MapActivity mapActivity = new MapActivity(this.getApplicationContext(), mapFragment);
+
+        List<LatLng> latlngCases = new ArrayList<>();
+        //initialize arrayList to array list in MapActivity
+        for(int x = 0; x < mapActivity.latLngs.size(); x++){
+            latlngCases.add(new LatLng(mapActivity.latLngs.get(x).latitude, mapActivity.latLngs.get(x).longitude));
+        }
+
+        //do a check on cases and remove the coordinate if below 4000 positive cases
+        for (int i = 0; i < stateList.size(); i++) {
+            //check positive cases
+            if(stateList.get(i).getPositive() < 100000) {
+                latlngCases.remove(i);
+            }
+            //Log.i("Check","Coordinates " + latlngCases.get(i));
+        }
+        //check to see the length of arraylist
+        Log.i("Check","LatLng Size " + latlngCases.size());
+
+        //mapActivity.addHeatmap(latlngCases);
+            //returning Null Pointer Exception
     }
 
     /*---------------------------------------------------
@@ -139,6 +165,7 @@ public class MainActivity
 
         int testLength = stateList.size();
         Log.i("Check", "ArrayList Length Check: " + testLength);
+
     }
 
     /*---------------------------------------------------

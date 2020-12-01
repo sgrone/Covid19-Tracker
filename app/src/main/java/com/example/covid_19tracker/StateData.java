@@ -20,7 +20,7 @@ public class StateData implements Serializable {
     private int hospitalizedCurrently;
 
     //Used to find the full name of a state based on the initials.
-    private static final String[][] stateNameList = {{"AL", "Alabama"}, {"AK", "Alaska"}, {"AZ", "Arizona"},
+    public static final String[][] stateNameList = {{"AL", "Alabama"}, {"AK", "Alaska"}, {"AZ", "Arizona"},
             {"AR", "Arkansas"}, {"CA", "California"}, {"CO", "Colorado"}, {"CT", "Connecticut"},
             {"DE", "Delaware"}, {"FL", "Florida"}, {"GA", "Georgia"}, {"HI", "Hawaii"},
             {"ID", "Idaho"}, {"IL", "Illinois"}, {"IN", "Indiana"}, {"IA", "Iowa"},
