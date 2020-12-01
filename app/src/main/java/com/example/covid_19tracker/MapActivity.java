@@ -37,10 +37,15 @@ public class MapActivity extends FragmentActivity {
     public GoogleMap map;
     SupportMapFragment mapFragment;
     List<LatLng> latLngs = new ArrayList<>();
+    ArrayList<StateData> stateList;
+    List<LatLng> latlngCases = new ArrayList<>();
 
-    public MapActivity(Context context, SupportMapFragment mapFragment) {
+
+
+    public MapActivity(Context context, SupportMapFragment mapFragment, ArrayList<StateData> stateList) {
         this.context = context;
         this.mapFragment = mapFragment;
+        this.stateList = stateList;
         initMap();
     }
 
@@ -57,15 +62,10 @@ public class MapActivity extends FragmentActivity {
                 //show USA
                 map.setLatLngBoundsForCameraTarget(usaBounds);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(USA.target, 2));
+
+                addHeatmap();
             }
         });
-
-        //read in data from JSON file
-        try {
-            latLngs = readItems(R.raw.states_locations);
-        } catch (JSONException e) {
-            Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
-        }
     }
 
     public static final CameraPosition USA =
@@ -82,10 +82,35 @@ public class MapActivity extends FragmentActivity {
 
 
 
-    public void addHeatmap(List<LatLng> latLngCases) {
+    public void addHeatmap() {
+        //read in data from JSON file
+        try {
+            latLngs = readItems(R.raw.states_locations);
+        } catch (JSONException e) {
+            Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
+        }
+
+        //initialize arrayList to array list in MapActivity
+        for(int x = 0; x < latLngs.size(); x++){
+            latlngCases.add(new LatLng(latLngs.get(x).latitude, latLngs.get(x).longitude));
+        }
+
+        //do a check on cases and remove the coordinate if below 4000 positive cases
+        for (int i = 0; i < stateList.size(); i++) {
+            //check positive cases
+            if(stateList.get(i).getPositive() < 100000) {
+                latlngCases.remove(i);
+
+                Log.i("Check","Coordinates " + latlngCases.get(i));
+            }
+
+        }
+
+        Log.i("Check","ArrayList Length " + latlngCases.size());
+
         //create the gradient
         int[] colors = {
-                Color.rgb(102, 225, 0), //green
+                Color.rgb(255, 0, 0), //green
                 Color.rgb(255, 0, 0) //red
         };
 
@@ -97,11 +122,14 @@ public class MapActivity extends FragmentActivity {
 
         //create heat map tile provider and pass it state coordinates and gradient
         HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
-                .data(latLngCases)
+                .data(latlngCases)
                 .gradient(gradient)
+                .radius(15)
                 .build();
 
-        map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+        if(map != null) {
+            TileOverlay overlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+        }
     }
 
     public List<LatLng> readItems ( @RawRes int resource) throws JSONException {

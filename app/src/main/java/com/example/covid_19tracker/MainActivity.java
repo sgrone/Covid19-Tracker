@@ -66,27 +66,8 @@ public class MainActivity
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.heatMap);
-        MapActivity mapActivity = new MapActivity(this.getApplicationContext(), mapFragment);
+        MapActivity mapActivity = new MapActivity(this.getApplicationContext(), mapFragment, stateList);
 
-        List<LatLng> latlngCases = new ArrayList<>();
-        //initialize arrayList to array list in MapActivity
-        for(int x = 0; x < mapActivity.latLngs.size(); x++){
-            latlngCases.add(new LatLng(mapActivity.latLngs.get(x).latitude, mapActivity.latLngs.get(x).longitude));
-        }
-
-        //do a check on cases and remove the coordinate if below 4000 positive cases
-        for (int i = 0; i < stateList.size(); i++) {
-            //check positive cases
-            if(stateList.get(i).getPositive() < 100000) {
-                latlngCases.remove(i);
-            }
-            //Log.i("Check","Coordinates " + latlngCases.get(i));
-        }
-        //check to see the length of arraylist
-        Log.i("Check","LatLng Size " + latlngCases.size());
-
-        //mapActivity.addHeatmap(latlngCases);
-            //returning Null Pointer Exception
     }
 
     /*---------------------------------------------------
