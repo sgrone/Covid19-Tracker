@@ -100,7 +100,6 @@ public class MapActivity extends FragmentActivity {
             //check positive cases
             if(stateList.get(i).getPositive() < 100000) {
                 latlngCases.remove(i);
-
                 Log.i("Check","Coordinates " + latlngCases.get(i));
             }
 
@@ -109,8 +108,8 @@ public class MapActivity extends FragmentActivity {
         Log.i("Check","ArrayList Length " + latlngCases.size());
 
         //create the gradient
-        int[] colors = {
-                Color.rgb(255, 0, 0), //green
+        int[] setColor = {
+                Color.rgb(255, 165, 0), //orange
                 Color.rgb(255, 0, 0) //red
         };
 
@@ -118,13 +117,13 @@ public class MapActivity extends FragmentActivity {
                 0.2f, 1f
         };
 
-        Gradient gradient = new Gradient(colors, startPoints);
+        Gradient gradient = new Gradient(setColor, startPoints);
 
-        //create heat map tile provider and pass it state coordinates and gradient
+        //create heat map tile provider and pass it state coordinates and gradient, and set a radius for the points
         HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
                 .data(latlngCases)
                 .gradient(gradient)
-                .radius(15)
+                .radius(17)
                 .build();
 
         if(map != null) {
