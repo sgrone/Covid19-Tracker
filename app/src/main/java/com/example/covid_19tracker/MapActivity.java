@@ -37,10 +37,15 @@ public class MapActivity extends FragmentActivity {
     public GoogleMap map;
     SupportMapFragment mapFragment;
     List<LatLng> latLngs = new ArrayList<>();
+    ArrayList<StateData> stateList;
+    List<LatLng> latlngCases = new ArrayList<>();
 
-    public MapActivity(Context context, SupportMapFragment mapFragment) {
+
+
+    public MapActivity(Context context, SupportMapFragment mapFragment, ArrayList<StateData> stateList) {
         this.context = context;
         this.mapFragment = mapFragment;
+        this.stateList = stateList;
         initMap();
     }
 
@@ -57,35 +62,55 @@ public class MapActivity extends FragmentActivity {
                 //show USA
                 map.setLatLngBoundsForCameraTarget(usaBounds);
                 map.moveCamera(CameraUpdateFactory.newLatLngZoom(USA.target, 2));
+
+                addHeatmap();
             }
         });
+    }
 
+    public static final CameraPosition USA =
+            //37.090200, -95.712900
+            new CameraPosition.Builder().target(new LatLng(51.887617, -110.547902))
+                    .zoom(0)
+                    .bearing(0)
+                    .tilt(0)
+                    .build();
+
+    LatLngBounds usaBounds = new LatLngBounds(
+            new LatLng(17.499635, -167.221229), //southwest bounds
+            new LatLng(75.979393, -64.743381) // northeast bounds
+    );
+
+
+
+    public void addHeatmap() {
         //read in data from JSON file
         try {
             latLngs = readItems(R.raw.states_locations);
         } catch (JSONException e) {
             Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
         }
-    }
 
-    public static final CameraPosition USA =
-            new CameraPosition.Builder().target(new LatLng(37.090200, -95.712900))
-                    .zoom(50.5f)
-                    .bearing(0)
-                    .tilt(0)
-                    .build();
+        //initialize arrayList to array list in MapActivity
+        for(int x = 0; x < latLngs.size(); x++){
+            latlngCases.add(new LatLng(latLngs.get(x).latitude, latLngs.get(x).longitude));
+        }
 
-    LatLngBounds usaBounds = new LatLngBounds(
-            new LatLng(38.377654, -122.512669), //west bounds
-            new LatLng(38.652731, -75.227514) // east bounds
-    );
+        //do a check on cases and remove the coordinate if below 4000 positive cases
+        for (int i = 0; i < stateList.size(); i++) {
+            //check positive cases
+            if(stateList.get(i).getPositive() < 100000) {
+                latlngCases.remove(i);
+                Log.i("Check","Coordinates " + latlngCases.get(i));
+            }
 
+        }
 
+        Log.i("Check","ArrayList Length " + latlngCases.size());
 
-    public void addHeatmap(List<LatLng> latLngCases) {
         //create the gradient
-        int[] colors = {
-                Color.rgb(102, 225, 0), //green
+        int[] setColor = {
+                Color.rgb(255, 165, 0), //orange
                 Color.rgb(255, 0, 0) //red
         };
 
@@ -93,15 +118,18 @@ public class MapActivity extends FragmentActivity {
                 0.2f, 1f
         };
 
-        Gradient gradient = new Gradient(colors, startPoints);
+        Gradient gradient = new Gradient(setColor, startPoints);
 
-        //create heat map tile provider and pass it state coordinates and gradient
+        //create heat map tile provider and pass it state coordinates and gradient, and set a radius for the points
         HeatmapTileProvider provider = new HeatmapTileProvider.Builder()
-                .data(latLngCases)
+                .data(latlngCases)
                 .gradient(gradient)
+                .radius(17)
                 .build();
 
-        map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+        if(map != null) {
+            TileOverlay overlay = map.addTileOverlay(new TileOverlayOptions().tileProvider(provider));
+        }
     }
 
     public List<LatLng> readItems ( @RawRes int resource) throws JSONException {
