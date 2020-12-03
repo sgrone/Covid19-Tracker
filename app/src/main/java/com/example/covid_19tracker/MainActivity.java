@@ -4,6 +4,7 @@ package com.example.covid_19tracker;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -143,6 +153,7 @@ public class MainActivity
 
         Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);
         toast.show();
+        barchart();
 
         //Test code for checking if State data was pulled in correctly.
         /*int testLength = stateList.size();
@@ -156,6 +167,73 @@ public class MainActivity
         Log.i("Check", "Variables Check: " + test1 + " | " + test2 + " | " + test3 + " | ");*/
 
     }
+    public void barchart() {
+        HorizontalBarChart barChart = (HorizontalBarChart) findViewById(R.id.chart);
+
+        BarData data = new BarData();
+
+        ArrayList<BarEntry> valueSet1 = new ArrayList<>();
+
+        ArrayList<String> labels = new ArrayList<>();
+        for (int i=0;i<stateList.size();i++){
+            labels.add(stateList.get(i).getStateName());
+        }
+        ArrayList<String> ylabels = new ArrayList<>();
+        int dataCount=0;
+        for (int i=0;i<stateList.size();++i) {
+            BarEntry entry = new BarEntry(dataCount,stateList.get(i).getPositiveIncrease());
+            valueSet1.add(entry);
+            ylabels.add(" "+i);
+            dataCount++;
+        }
+        List<IBarDataSet> dataSets = new ArrayList<>();
+        BarDataSet bds = new BarDataSet(valueSet1, "Daily Cases ");
+        bds.setColor(Color.RED);
+        //bds.setColors(ColorTemplate.MATERIAL_COLORS);
+        String[] xAxisLabels = labels.toArray(new String[0]);
+        String[] yAxisLabels = ylabels.toArray(new String[0]);
+        bds.setStackLabels(xAxisLabels);
+        dataSets.add(bds);
+        data.addDataSet(bds);
+        data.setDrawValues(true);
+        data.setBarWidth(0.7f);
+
+        XAxis xaxis = barChart.getXAxis();
+        xaxis.setDrawGridLines(false);
+        xaxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xaxis.setGranularityEnabled(true);
+        xaxis.setGranularity(1);
+        xaxis.setDrawLabels(true);
+        xaxis.setLabelCount(dataCount);
+        // xaxis.setXOffset(10);
+        xaxis.setDrawAxisLine(false);
+        barChart.getXAxis().setSpaceMax(10f);
+        //CategoryBarChartXaxisFormatter xaxisFormatter = new CategoryBarChartXaxisFormatter(xAxisLabels);
+        //xaxis.setValueFormatter(xaxisFormatter);
+
+        YAxis yAxisLeft = barChart.getAxisLeft();
+        yAxisLeft.setEnabled(false);
+
+        YAxis yAxisRight = barChart.getAxisRight();
+        yAxisRight.setPosition(YAxis.YAxisLabelPosition.INSIDE_CHART);
+        yAxisRight.setDrawGridLines(false);
+        yAxisRight.setDrawAxisLine(false);
+        barChart.getXAxis().setValueFormatter(new IndexAxisValueFormatter(labels));
+        //barChart.getXAxis().setLabelCount(100);
+        //barChart.getAxisLeft().setLabelCount(50);
+        Legend legend = barChart.getLegend();
+        legend.setEnabled(false);
+
+        barChart.setFitBars(true);
+        barChart.setData(data);
+        barChart.setDescription(null);
+        barChart.setXAxisRenderer(new CustomXAxisRendererHorizontalBarChart(barChart.getViewPortHandler(),xaxis,barChart.getTransformer(YAxis.AxisDependency.LEFT),barChart,labels.size()));
+        barChart.animateY(2000);
+        barChart.invalidate();
+        barChart.setPinchZoom(true);
+
+    }
+
 
     /*---------------------------------------------------
         Determine what occurs when selected drop-down items change
