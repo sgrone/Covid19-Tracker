@@ -12,70 +12,90 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="20dp">
+        android:padding="5dp">
 
-        <!-- Display Title : "COVID- 19 TRACKER -->
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:text="Covid-19 Data"
-            android:textColor="#ff9d5c"
-            android:textSize="50sp"
-            android:textStyle="bold" />
 
-        <!--TEMP BUTTON TO FETCH JSON DATA-->
+        <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="#7CABBD"
+        android:id="@+id/titleBar">
+
+            <!-- Display Title : "COVID- 19 TRACKER -->
 
         <!--TEXT: SEARCH BY STATE-->
-        <TextView
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_gravity="center"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:text="Covid-19 Data"
+                android:textColor="#F5CF73"
+                android:textSize="50sp"
+
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/staticSeachByState"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="5dp"
+                android:text="Search by State:"
+                android:textStyle="bold"
+                android:textColor="#FFA28F"
+                android:textSize="25sp"/>
+
+            <!--SPINNER TO SELECT A STATE-->
+            <Spinner
+                android:layout_width="200dp"
+                android:layout_height="40dp"
+                android:id="@+id/stateSpinner"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginStart="5dp"
+                android:layout_below="@+id/staticSeachByState"
+                android:layout_marginTop="5dp"
+                android:textColor="#FFC6BA"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <!--BUTTON TO MOVE TO SECOND ACTIVITY WITH SELECTED CURRENT STATE-->
+            <Button
+                android:id="@+id/viewChangeBtn"
+                android:layout_width="125dp"
+                android:layout_height="40dp"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginStart="5dp"
+                android:textSize="20sp"
+                android:background="@drawable/custom_button"
+                android:textColor="#FFFFFF"
+                android:textAllCaps="false"
+                android:text="Search" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:id="@+id/staticSeachByState"
-            android:layout_below="@+id/title"
-            android:layout_marginTop="15dp"
-            android:layout_marginStart="5dp"
-            android:text="Search by State:"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:textSize="25sp"/>
+            android:layout_below="@+id/titleBar"
+            android:layout_marginTop="5dp"
+            android:background="#1C5A71"
+            android:id="@+id/heatMapLayout"
+            android:gravity="center">
 
-        <!--SPINNER TO SELECT A STATE-->
-        <Spinner
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:id="@+id/stateSpinner"
-            android:fontFamily="sans-serif-light"
-            android:layout_marginStart="5dp"
-            android:layout_below="@+id/staticSeachByState"
-            android:layout_marginTop="15dp"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-
-        <!--BUTTON TO MOVE TO SECOND ACTIVITY WITH SELECTED CURRENT STATE-->
-        <Button
-            android:id="@+id/viewChangeBtn"
-            android:layout_width="75dp"
-            android:layout_height="40dp"
-            android:fontFamily="sans-serif-light"
-            android:layout_marginStart="5dp"
-            android:layout_alignTop="@id/stateSpinner"
-            android:layout_toEndOf="@+id/stateSpinner"
-            android:text="GO" />
-
-        <!--HEATMAP-->
-        <fragment
+            <!--HEATMAP-->
+            <fragment
             xmlns:app="http://schemas.android.com/apk/res-auto"
-
-            android:id="@+id/heatMap"
             android:contentDescription="Heatmap"
             android:name="com.google.android.gms.maps.SupportMapFragment"
-            android:layout_below="@+id/viewChangeBtn"
-            android:layout_marginTop="15dp"
+            android:layout_below="@+id/titleBar" android:id="@+id/heatMap"
             android:layout_centerHorizontal="true"
             android:layout_width="350dp"
-            android:layout_height="250dp"
+            android:layout_height="250dp" android:layout_marginVertical="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -83,73 +103,108 @@
             tools:layout="@layout/amu_webview"
             tools:context=".MapActivity"
             />
-
+        </LinearLayout>
         <!--TEXT: SORT BY-->
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:id="@+id/sortBy"
-            android:layout_below="@+id/chart"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="25dp"
-            android:textColor="@android:color/black"
-            android:text="Sort By:"
-            android:textStyle="bold"
-            android:textSize="25sp"/>
-
-        <!--SPINNER: SORTING METRIC-->
-        <Spinner
-            android:layout_width="175dp"
-            android:layout_height="40dp"
-            android:id="@+id/metricSpinner"
-            android:fontFamily="sans-serif-light"
-            android:layout_marginStart="5dp"
-            android:textSize="25sp"
-            android:layout_below="@+id/sortBy"
-            android:textStyle="bold"/>
-
-        <!--SPINNER: SELECT SORT BY ASCENDING OR DESCENDING-->
-        <Spinner
-            android:layout_width="175dp"
-            android:layout_height="40dp"
-            android:id="@+id/sortSpinner"
-            android:fontFamily="sans-serif-light"
-            android:layout_marginStart="15dp"
-            android:layout_toEndOf="@+id/metricSpinner"
-            android:textSize="25sp"
-            android:layout_alignTop="@+id/metricSpinner"
-            android:textStyle="bold"/>
-
-        <!--TEXTVIEW TO HOLD SORTED LIST OF STATES-->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-light"
-            android:id="@+id/sortedStateList"
-            android:layout_below="@+id/metricSpinner"
-            android:layout_marginStart="15dp"
-            android:layout_marginTop="15dp"
-            android:textSize="20sp"/>
-
-        <Button
-            android:id="@+id/fetchDataBtn"
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/sortedStateList"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:fontFamily="sans-serif-light"
-            android:text="RE-FETCH DATA"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-        <com.github.mikephil.charting.charts.HorizontalBarChart
-            android:id="@+id/chart"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="500dp"
-            android:layout_below="@id/heatMap"
-            android:layout_marginTop="6dp"/>
+            android:layout_height="wrap_content"
+            android:id="@+id/barChart"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:background="#7CABBD"
+            android:layout_below="@id/heatMapLayout"
+            android:paddingBottom="20dp">
+
+            <com.github.mikephil.charting.charts.HorizontalBarChart
+                android:id="@+id/chart"
+                android:paddingHorizontal="15dp"
+                android:layout_width="match_parent"
+                android:layout_height="500dp"
+                />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/barChart"
+            android:layout_marginTop="5dp"
+            android:background="#306D84">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/sortBy"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="25dp"
+                android:textColor="#FFE4A3"
+                android:text="Sort By:"
+                android:textStyle="bold"
+                android:textSize="25sp"/>
+
+            <!--SPINNER: SORTING METRIC-->
+            <Spinner
+                android:layout_width="175dp"
+                android:layout_height="40dp"
+                android:id="@+id/metricSpinner"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginStart="5dp"
+                android:textSize="25sp"
+                android:layout_below="@+id/sortBy"
+                android:textStyle="bold"/>
+
+            <!--SPINNER: SELECT SORT BY ASCENDING OR DESCENDING-->
+            <Spinner
+                android:layout_width="175dp"
+                android:layout_height="40dp"
+                android:id="@+id/sortSpinner"
+                android:fontFamily="sans-serif-light"
+                android:layout_marginStart="15dp"
+                android:layout_toEndOf="@+id/metricSpinner"
+                android:textSize="25sp"
+                android:layout_alignTop="@+id/metricSpinner"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/sortedStateList"
+                android:textColor="#F5CF73"
+                android:layout_below="@+id/metricSpinner"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="15dp"
+                android:textSize="20sp"/>
+
+            <TextView
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="sans-serif-light"
+                android:id="@+id/stateNumbers"
+                android:layout_toEndOf="@id/sortedStateList"
+                android:textColor="#F5CF73"
+                android:layout_alignTop="@id/sortedStateList"
+                android:layout_marginStart="30dp"
+                android:textSize="20sp"/>
+
+            <!--TEMP BUTTON TO FETCH JSON DATA-->
+            <Button
+                android:id="@+id/fetchDataBtn"
+                android:layout_width="200dp"
+                android:layout_height="60dp"
+                android:layout_below="@+id/sortedStateList"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5dp"
+                android:fontFamily="sans-serif-light"
+                android:text="Re-Fetch Data"
+                android:layout_marginStart="5dp"
+                android:textSize="20sp"
+                android:background="@drawable/custom_button"
+                android:textColor="#FFFFFF"
+                android:textAllCaps="false"
+                android:layout_marginBottom="10dp"/>
+        </RelativeLayout>
 
     </RelativeLayout>
 

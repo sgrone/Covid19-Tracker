@@ -44,10 +44,10 @@ public class MainActivity
         GLOBAL VARIABLES
       ---------------------------------------------------*/
     private ArrayList<StateData> stateList;
-    private final static int CASES = 1, DEATHS = 2, HOSPITALIZED = 3;
+    private final static int DAILY_CASES = 1, TOTAL_CASES = 2, DAILY_DEATHS = 3, TOTAL_DEATHS = 4, DAILY_HOSPITALIZED = 5, TOTAL_HOSPITALIZED = 6;
     private final static int ASC = 1, DESC = 2;
-    private int metric = CASES, sortBy = ASC;
-    private TextView sortedStateList;
+    private int metric = TOTAL_CASES, sortBy = ASC;
+    private TextView sortedStateList, stateNumbers;
     private StateData currentState;
     private DataHandler handler;
     private Spinner stateSpinner, metricSpinner, sortSpinner;
@@ -64,6 +64,7 @@ public class MainActivity
         // Link those objects with their respective id's
         // that we have given in .XML file
         sortedStateList = findViewById(R.id.sortedStateList);
+        stateNumbers = findViewById(R.id.stateNumbers);
         spinnerSetup(); // Initialize spinners (drop-down lists)
 
         //Initial API data pulling.
@@ -244,14 +245,23 @@ public class MainActivity
                 currentState = selectState(adapterView.getItemAtPosition(i).toString());
                 break;
             case R.id.metricSpinner:
+                if (adapterView.getItemAtPosition(i).toString().equals("Daily Cases")) {
+                    setMetric(DAILY_CASES);
+                }
                 if (adapterView.getItemAtPosition(i).toString().equals("Total Cases")) {
-                    setMetric(CASES);
+                    setMetric(TOTAL_CASES);
+                }
+                if (adapterView.getItemAtPosition(i).toString().equals("Daily Deaths")) {
+                    setMetric(DAILY_DEATHS);
                 }
                 if (adapterView.getItemAtPosition(i).toString().equals("Total Deaths")) {
-                    setMetric(DEATHS);
+                    setMetric(TOTAL_DEATHS);
+                }
+                if (adapterView.getItemAtPosition(i).toString().equals("Daily Hospitalizations")) {
+                    setMetric(DAILY_HOSPITALIZED);
                 }
                 if (adapterView.getItemAtPosition(i).toString().equals("Currently Hospitalized")) {
-                    setMetric(HOSPITALIZED);
+                    setMetric(TOTAL_HOSPITALIZED);
                 }
 
                 sortStateList(getMetric(), getSortBy());
@@ -294,53 +304,6 @@ public class MainActivity
     }
 
     /*---------------------------------------------------
-        UPDATE
-        Currently a dummy-list of 5 states is created for testing purposes
-    ---------------------------------------------------*/
-    private void populateStateList() {
-        /*
-        // TEMP STATE DATA
-        StateData california = new StateData();
-        california.setState("CA");
-        california.setDeath(50000);
-        california.setHospitalizedCurrently(2000);
-        california.setPositive(249);
-
-        StateData michigan = new StateData();
-        michigan.setState("MI");
-        michigan.setDeath(3500);
-        michigan.setHospitalizedCurrently(1570);
-        michigan.setPositive(499);
-
-        StateData florida = new StateData();
-        florida.setState("FL");
-        florida.setDeath(4500);
-        florida.setHospitalizedCurrently(1600);
-        florida.setPositive(9999);
-
-        StateData ohio = new StateData();
-        ohio.setState("OH");
-        ohio.setDeath(5600);
-        ohio.setHospitalizedCurrently(800);
-        ohio.setPositive(1999);
-
-        StateData texas = new StateData();
-        texas.setState("TX");
-        texas.setDeath(1000);
-        texas.setHospitalizedCurrently(10000);
-        texas.setPositive(3999);
-
-        // TO_DO - REPLACE tempStateList WITH stateList ONCE IMPLEMENTED
-        tempStateList.add(california);
-        tempStateList.add(michigan);
-        tempStateList.add(florida);
-        tempStateList.add(ohio);
-        tempStateList.add(texas);
-
-        currentState = michigan; */
-    }
-
-    /*---------------------------------------------------
         When a state in chosen in stateSpinner, this method
         matches that state to a state in stateList
     ---------------------------------------------------*/
@@ -363,6 +326,31 @@ public class MainActivity
             stateString = stateString + temp.toString() + ". " + stateList.get(i).getStateName() + "\n";
         }
         sortedStateList.setText(stateString);
+        printStateMetrics();
+    }
+
+    /*---------------------------------------------------
+        Prints metrics for the sorted states
+    ---------------------------------------------------*/
+
+    public void printStateMetrics() {
+        String metricString = "";
+        for (int i = 0; i < stateList.size(); i++) {
+            if (metric == DAILY_CASES)
+                metricString = metricString + stateList.get(i).getPositiveIncrease() + "\n";
+            if (metric == TOTAL_CASES)
+                metricString = metricString + stateList.get(i).getPositive() + "\n";
+            if (metric == DAILY_DEATHS)
+                metricString = metricString + stateList.get(i).getDeathIncrease() + "\n";
+            if (metric == TOTAL_DEATHS)
+                metricString = metricString + stateList.get(i).getDeath() + "\n";
+            if (metric == DAILY_HOSPITALIZED)
+                metricString = metricString + stateList.get(i).getHospitalizedIncrease() + "\n";
+            if (metric == TOTAL_HOSPITALIZED)
+                metricString = metricString + stateList.get(i).getHospitalizedIncrease() + "\n";
+        }
+
+        stateNumbers.setText(metricString);
     }
 
     /*---------------------------------------------------
@@ -373,8 +361,27 @@ public class MainActivity
         on https://geeksforgeeks.org/bubble-sort/
     ---------------------------------------------------*/
     public void sortStateList(int metric, int sortBy) {
-        //SORT BY CASES
-        if (metric == CASES) {
+        //SORT BY DAILY CASES
+        if (metric == DAILY_CASES) {
+            // Sort by ASC
+            int n = stateList.size();
+            for (int i = 0; i < n - 1; i++) {
+                for (int j = 0; j < n - i - 1; j++) {
+                    if (stateList.get(j).getPositiveIncrease() > stateList.get(j + 1).getPositiveIncrease()) {
+                        StateData temp = stateList.get(j);
+                        stateList.set(j, stateList.get(j + 1));
+                        stateList.set(j + 1, temp);
+                    }
+                }
+            }
+            // IF DESC, reverse order
+            if (sortBy == DESC) {
+                Collections.reverse(stateList);
+            }
+        }
+
+        //SORT BY TOTAL CASES
+        if (metric == TOTAL_CASES) {
             // Sort by ASC
             int n = stateList.size();
             for (int i = 0; i < n - 1; i++) {
@@ -392,8 +399,27 @@ public class MainActivity
             }
         }
 
-        //SORT BY DEATHS
-        if (metric == DEATHS) {
+        //SORT BY DAILY DEATHS
+        if (metric == DAILY_DEATHS) {
+            // Sort by ASC
+            int n = stateList.size();
+            for (int i = 0; i < n - 1; i++) {
+                for (int j = 0; j < n - i - 1; j++) {
+                    if (stateList.get(j).getDeathIncrease() > stateList.get(j + 1).getDeathIncrease()) {
+                        StateData temp = stateList.get(j);
+                        stateList.set(j, stateList.get(j + 1));
+                        stateList.set(j + 1, temp);
+                    }
+                }
+            }
+            // IF DESC, reverse order
+            if (sortBy == DESC) {
+                Collections.reverse(stateList);
+            }
+        }
+
+        //SORT BY TOTAL DEATHS
+        if (metric == TOTAL_DEATHS) {
             // Sort by ASC
             int n = stateList.size();
             for (int i = 0; i < n - 1; i++) {
@@ -411,8 +437,27 @@ public class MainActivity
             }
         }
 
-        //SORT BY HOSPITALIZATIONS
-        if (metric == HOSPITALIZED) {
+        //SORT BY DAILY HOSPITALIZATIONS
+        if (metric == DAILY_HOSPITALIZED) {
+            // Sort by ASC
+            int n = stateList.size();
+            for (int i = 0; i < n - 1; i++) {
+                for (int j = 0; j < n - i - 1; j++) {
+                    if (stateList.get(j).getHospitalizedIncrease() > stateList.get(j + 1).getHospitalizedIncrease()) {
+                        StateData temp = stateList.get(j);
+                        stateList.set(j, stateList.get(j + 1));
+                        stateList.set(j + 1, temp);
+                    }
+                }
+            }
+            // IF DESC, reverse order
+            if (sortBy == DESC) {
+                Collections.reverse(stateList);
+            }
+        }
+
+        //SORT BY TOTAL HOSPITALIZATIONS
+        if (metric == TOTAL_HOSPITALIZED) {
             // Sort by ASC
             int n = stateList.size();
             for (int i = 0; i < n - 1; i++) {

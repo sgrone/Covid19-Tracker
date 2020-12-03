@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 public class Activity2 extends AppCompatActivity {
 
-    private TextView stateName;
+    private TextView stateName, metricsTV;
     private ImageView stateImage;
     private StateData currentState;
 
@@ -27,9 +27,11 @@ public class Activity2 extends AppCompatActivity {
 
         // Update screen information
         stateName = (TextView) findViewById(R.id.stateName);
+        metricsTV =  (TextView)findViewById(R.id.metricsTV);
         stateImage = findViewById(R.id.stateMap);
         stateName.setText(currentState.getStateName());
         setStateImage();
+        printMetrics();
     }
 
     private void setStateImage() {
@@ -187,27 +189,41 @@ public class Activity2 extends AppCompatActivity {
             default:
                 break;
         }
-        setStateColor(currentState.getPositive()); //ADD CALL TO STATES CURRENT NUMBERS
+        setStateColor(currentState.getPositiveIncrease()); //ADD CALL TO STATES CURRENT NUMBERS
     }
 
     // NOTE: Colors can be accessed in app --> res --> values --> colors.xml
     private void setStateColor(int cases) {
-        if (cases < 250)
+        if (cases < 500)
             stateImage.setColorFilter(ContextCompat.getColor(this, R.color.best));
-        else if (cases < 500)
+        else if (cases < 100)
             stateImage.setColorFilter(ContextCompat.getColor(this, R.color.good));
-        else if (cases < 1000)
-            stateImage.setColorFilter(ContextCompat.getColor(this, R.color.fine));
         else if (cases < 2000)
+            stateImage.setColorFilter(ContextCompat.getColor(this, R.color.fine));
+        else if (cases < 5000)
             stateImage.setColorFilter(ContextCompat.getColor(this, R.color.above_average));
-        else if (cases < 4000)
+        else if (cases < 10000)
             stateImage.setColorFilter(ContextCompat.getColor(this, R.color.bad));
-        else if (cases >= 4000)
+        else if (cases >= 20000)
             stateImage.setColorFilter(ContextCompat.getColor(this, R.color.worst));
         else {
             stateImage.setColorFilter(Color.RED);
             Toast toast = Toast.makeText(this, "Error setting state color", Toast.LENGTH_LONG);
             toast.show();
         }
+    }
+
+    private void printMetrics() {
+        String metricsString= "";
+        metricsString = metricsString + "Daily Cases: " + currentState.getPositiveIncrease() + "\n\n";
+        metricsString = metricsString + "Total Cases: " + currentState.getPositive() + "\n\n";
+        metricsString = metricsString + "Daily Deaths: " + currentState.getDeathIncrease() + "\n\n";
+        metricsString = metricsString + "Total Deaths: " + currentState.getDeath() + "\n\n";
+        if (currentState.getHospitalizedIncrease() == 0) metricsString = metricsString + "Daily Hospitalizations: n/a\n\n";
+        else metricsString = metricsString + "Daily Hospitalizations: " + currentState.getHospitalizedIncrease() + "\n\n";
+        if (currentState.getHospitalizedCurrently() == 0) metricsString = metricsString + "Currently Hospitalized: n/a\n\n";
+        else metricsString = metricsString + "Currently Hospitalized: " + currentState.getHospitalizedCurrently() + "\n\n";
+
+        metricsTV.setText(metricsString);
     }
 }

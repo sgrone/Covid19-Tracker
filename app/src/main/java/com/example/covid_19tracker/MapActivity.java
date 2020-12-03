@@ -37,16 +37,21 @@ public class MapActivity extends FragmentActivity {
     public GoogleMap map;
     SupportMapFragment mapFragment;
     List<LatLng> latLngs = new ArrayList<>();
-    ArrayList<StateData> stateList;
+    ArrayList<StateData> mapStateList = new ArrayList<StateData>();
     List<LatLng> latlngCases = new ArrayList<>();
-
-
 
     public MapActivity(Context context, SupportMapFragment mapFragment, ArrayList<StateData> stateList) {
         this.context = context;
         this.mapFragment = mapFragment;
-        this.stateList = stateList;
+        copyList(stateList);
         initMap();
+    }
+
+    // We need to make a new list that because the ordering of the list that is passed gets sorted costantly
+    private void copyList(ArrayList<StateData> stateList) {
+        for (int i = 0; i < stateList.size(); i++) {
+            mapStateList.add(stateList.get(i));
+        }
     }
 
     private void initMap() {
@@ -97,9 +102,9 @@ public class MapActivity extends FragmentActivity {
         }
 
         //do a check on cases and remove the coordinate if below 4000 positive cases
-        for (int i = 0; i < stateList.size(); i++) {
+        for (int i = 0; i < mapStateList.size(); i++) {
             //check positive cases
-            if(stateList.get(i).getPositive() < 100000) {
+            if(mapStateList.get(i).getPositive() < 100000) {
                 latlngCases.remove(i);
                 Log.i("Check","Coordinates " + latlngCases.get(i));
             }

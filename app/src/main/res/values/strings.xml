@@ -55,9 +55,12 @@
     </string-array>
 
     <string-array name="metrics">
-        <item>Currently Hospitalized</item>
+        <item>Daily Cases</item>
         <item>Total Cases</item>
+        <item>Daily Deaths</item>
         <item>Total Deaths</item>
+        <item>Daily Hospitalizations</item>
+        <item>Currently Hospitalized</item>
     </string-array>
 
     <string-array name="sortOptions">
