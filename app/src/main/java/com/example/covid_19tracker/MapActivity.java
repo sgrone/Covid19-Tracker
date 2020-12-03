@@ -96,21 +96,16 @@ public class MapActivity extends FragmentActivity {
             Toast.makeText(this, "Problem reading list of locations.", Toast.LENGTH_LONG).show();
         }
 
-        //initialize arrayList to array list in MapActivity
-        for(int x = 0; x < latLngs.size(); x++){
-            latlngCases.add(new LatLng(latLngs.get(x).latitude, latLngs.get(x).longitude));
-        }
-
-        //do a check on cases and remove the coordinate if below 4000 positive cases
+        //do a check on cases and add the coordinate if above 20,000 positive cases total
         for (int i = 0; i < mapStateList.size(); i++) {
             //check positive cases
-            if(mapStateList.get(i).getPositive() < 100000) {
-                latlngCases.remove(i);
-                Log.i("Check","Coordinates " + latlngCases.get(i));
+            if(mapStateList.get(i).getPositive() > 20000) {
+                latlngCases.add(new LatLng(latLngs.get(i).latitude, latLngs.get(i).longitude));
             }
 
         }
 
+        //check array size
         Log.i("Check","ArrayList Length " + latlngCases.size());
 
         //create the gradient
