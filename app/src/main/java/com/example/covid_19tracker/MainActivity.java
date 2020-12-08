@@ -69,7 +69,6 @@ public class MainActivity
 
         //Initial API data pulling.
         fetchData();
-        createMap();
     }
 
     private void createMap() {
@@ -148,7 +147,7 @@ public class MainActivity
             e.printStackTrace();
         }
         stateList = dataPuller.getData();
-
+        createMap();
         sortStateList(getMetric(), getSortBy());
 
         Toast toast = Toast.makeText(this, "Fetching data", Toast.LENGTH_SHORT);

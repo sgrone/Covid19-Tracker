@@ -99,7 +99,7 @@ public class MapActivity extends FragmentActivity {
         //do a check on cases and add the coordinate if above 20,000 positive cases total
         for (int i = 0; i < mapStateList.size(); i++) {
             //check positive cases
-            if(mapStateList.get(i).getPositive() > 20000) {
+            if(mapStateList.get(i).getPositiveIncrease() > 2000) {
                 latlngCases.add(new LatLng(latLngs.get(i).latitude, latLngs.get(i).longitude));
             }
 
